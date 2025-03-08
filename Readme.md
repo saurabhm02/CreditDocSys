@@ -4,6 +4,7 @@ A web application for scanning and comparing text documents with a built-in cred
 
 ## Project structure
 
+```
 docSys/
 ├── index.js                # Main entry point
 ├── .env                    # Environment variables
@@ -18,6 +19,7 @@ docSys/
 │   ├── services/           # Business logic
 │   └── utils/              # Utility functions
 └── public/                 # frontend files
+```
 
 ## Features
 
