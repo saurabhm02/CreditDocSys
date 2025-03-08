@@ -2,6 +2,23 @@
 
 A web application for scanning and comparing text documents with a built-in credit system.
 
+## Project structure
+
+docSys/
+├── index.js                # Main entry point
+├── .env                    # Environment variables
+├── uploads/                # Temporary storage for uploaded files
+├── storage/                # Fallback storage when Redis is unavailable
+├── src/
+│   ├── config/             # Configuration files
+│   ├── controllers/        # Request handlers
+│   ├── middleware/         # Express middleware
+│   ├── models/             # Database models
+│   ├── routes/             # API routes
+│   ├── services/           # Business logic
+│   └── utils/              # Utility functions
+└── public/                 # frontend files
+
 ## Features
 
 - User authentication (register, login)
@@ -14,6 +31,7 @@ A web application for scanning and comparing text documents with a built-in cred
 - Node.js (v14 or higher)
 - MongoDB
 - Redis
+
 
 ## Installation
 
