@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Document - DocScan</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar (same as dashboard.html) -->
+        <aside class="sidebar">
+            <!-- Sidebar content (same as dashboard.html) -->
+        </aside>
+
+        <main class="main-content">
+            <!-- Header (same as dashboard.html) -->
+            <header class="dashboard-header">
+                <!-- Header content (same as dashboard.html) -->
+            </header>
+
+            <div class="dashboard-content">
+                <div class="page-header">
+                    <h1>Scan Document</h1>
+                    <p>Upload a document to scan and find matches</p>
+                </div>
+
+                <div class="scan-container">
+                    <div class="upload-section">
+                        <div class="upload-card">
+                            <div class="upload-header">
+                                <h2>Upload Document</h2>
+                                <p>Supported formats: .txt, .md, .csv</p>
+                            </div>
+                            <div class="upload-body">
+                                <form id="scan-form">
+                                    <div class="file-upload-container">
+                                        <div class="file-upload-area" id="drop-area">
+                                            <input type="file" id="file-input" name="document" accept=".txt,.text,.md,.csv" hidden>
+                                            <div class="upload-icon">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                            </div>
+                                            <div class="upload-text">
+                                                <p>Drag & drop your file here</p>
+                                                <p>or</p>
+                                                <button type="button" id="browse-btn" class="btn btn-outline">Browse Files</button>
+                                            </div>
+                                        </div>
+                                        <div class="selected-file hidden" id="selected-file">
+                                            <div class="file-info">
+                                                <i class="fas fa-file-alt"></i>
+                                                <div class="file-details">
+                                                    <span class="file-name">document.txt</span>
+                                                    <span class="file-size">0 KB</span>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="btn btn-icon" id="remove-file">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="scan-options">
+                                        <h3>Scan Options</h3>
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <input type="checkbox" id="use-ai" name="useAI" checked>
+                                                <label for="use-ai">Use AI for better matching (1 credit)</label>
+                                            </div>
+                                        </div>
+                                        <div class="credits-info">
+                                            <p>You have <span id="available-credits">10</span> credits available</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary btn-block" id="scan-btn" disabled>
+                                            <i class="fas fa-search"></i> Scan Document
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-section hidden" id="results-section">
+                        <div class="results-card">
+                            <div class="results-header">
+                                <h2>Scan Results</h2>
+                                <div class="scan-info">
+                                    <span class="scan-date">Scanned on <time id="scan-date">May 10, 2025</time></span>
+                                    <span class="scan-type">AI-powered scan</span>
+                                </div>
+                            </div>
+                            <div class="results-body">
+                                <div class="document-preview">
+                                    <h3>Document Details</h3>
+                                    <div class="document-card">
+                                        <div class="document-icon">
+                                            <i class="fas fa-file-alt"></i>
+                                        </div>
+                                        <div class="document-info">
+                                            <h4 id="document-title">document.txt</h4>
+                                            <p id="document-preview">Document content preview...</p>
+                                            <div class="document-meta">
+                                                <span><i class="fas fa-calendar"></i> <time id="document-date">May 10, 2025</time></span>
+                                                <a href="#" id="view-document" class="btn btn-sm btn-outline">View Document</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="matches-container">
+                                    <h3>Similar Documents</h3>
+                                    <div class="matches-list" id="matches-list">
+                                        <div class="empty-state hidden">
+                                            <i class="fas fa-search"></i>
+                                            <p>No similar documents found</p>
+                                        </div>
+                                        <!-- Matches will be added here dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="results-footer">
+                                <button class="btn btn-outline" id="new-scan-btn">
+                                    <i class="fas fa-plus"></i> New Scan
+                                </button>
+                                <button class="btn btn-primary" id="save-results-btn">
+                                    <i class="fas fa-save"></i> Save Results
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/documents.js"></script>
+</body>
+</html>

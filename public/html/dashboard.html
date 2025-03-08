@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - DocScan</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <h2>DocScan</h2>
+                </div>
+                <button class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="sidebar-content">
+                <nav class="sidebar-menu">
+                    <ul>
+                        <li class="active">
+                            <a href="dashboard.html">
+                                <i class="fas fa-home"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="documents.html">
+                                <i class="fas fa-file-alt"></i>
+                                <span>Documents</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="scan.html">
+                                <i class="fas fa-search"></i>
+                                <span>Scan Document</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="history.html">
+                                <i class="fas fa-history"></i>
+                                <span>Scan History</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="credits.html">
+                                <i class="fas fa-coins"></i>
+                                <span>Credits</span>
+                            </a>
+                        </li>
+                        <li class="admin-only hidden">
+                            <a href="admin.html">
+                                <i class="fas fa-user-shield"></i>
+                                <span>Admin Panel</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="sidebar-footer">
+                    <a href="settings.html">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                    <a href="#" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div class="header-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search documents...">
+                </div>
+                <div class="header-actions">
+                    <div class="credits-badge">
+                        <i class="fas fa-coins"></i>
+                        <span id="credits-count">10</span>
+                    </div>
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=John+Doe&background=0D8ABC&color=fff" alt="User">
+                        <div class="user-info">
+                            <span class="user-name">John Doe</span>
+                            <span class="user-role">User</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                    <p>Welcome back, <span id="user-name">John</span>!</p>
+                </div>
+
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Documents</h3>
+                            <p id="documents-count">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Scans</h3>
+                            <p id="scans-count">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Credits</h3>
+                            <p id="dashboard-credits">10</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Matches</h3>
+                            <p id="matches-count">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-sections">
+                    <div class="section recent-documents">
+                        <div class="section-header">
+                            <h2>Recent Documents</h2>
+                            <a href="documents.html" class="btn btn-outline btn-sm">View All</a>
+                        </div>
+                        <div class="section-content">
+                            <div class="documents-list" id="recent-documents-list">
+                                <div class="empty-state">
+                                    <i class="fas fa-file-alt"></i>
+                                    <p>No documents yet</p>
+                                    <a href="scan.html" class="btn btn-primary">Scan Document</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section recent-scans">
+                        <div class="section-header">
+                            <h2>Recent Scans</h2>
+                            <a href="history.html" class="btn btn-outline btn-sm">View All</a>
+                        </div>
+                        <div class="section-content">
+                            <div class="scans-list" id="recent-scans-list">
+                                <div class="empty-state">
+                                    <i class="fas fa-history"></i>
+                                    <p>No scan history yet</p>
+                                    <a href="scan.html" class="btn btn-primary">Scan Document</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="actions-grid">
+                        <a href="scan.html" class="action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-file-upload"></i>
+                            </div>
+                            <h3>Scan Document</h3>
+                            <p>Upload and scan a new document</p>
+                        </a>
+                        <a href="credits.html" class="action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <h3>Request Credits</h3>
+                            <p>Get more credits for scanning</p>
+                        </a>
+                        <a href="documents.html" class="action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h3>Find Documents</h3>
+                            <p>Search through your documents</p>
+                        </a>
+                        <a href="settings.html" class="action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <h3>Settings</h3>
+                            <p>Configure your account</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

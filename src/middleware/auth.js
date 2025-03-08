@@ -1,55 +1,104 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-
+require("dotenv").config();
+const { User } = require('../models/index');
+const logger = require('../utils/logger');
 const jwt_secret = process.env.JWT_SECRET;
 
-const protect = async (req, res, next) => {
-    try {
-        const token = req.cookies.token || req.body.token || req.header("Authorization").replace("Bearer", "").trim();
+exports.auth = async (req, res, next) => {
+    try {      
+        logger.info(`Authenticating request`);
         
-        // Check if token is missing
+        let token;
+        
+        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+            token = req.headers.authorization.split(' ')[1];
+            logger.debug(`Token extracted from Authorization header: ${token.substring(0, 20)}...`);
+        } else if (req.cookies && req.cookies.token) {
+            token = req.cookies.token;
+            logger.debug('Token extracted from cookies');
+        } else if (req.body && req.body.token) {
+            token = req.body.token;
+            logger.debug('Token extracted from request body');
+        }
+        
+        // Check if token exists
         if (!token) {
-          return res.status(401).json({
-            success: false,
-            message: "Token is missing",
-          });
+            logger.warn('Authentication failed: Token is missing');
+            return res.status(401).json({
+                success: false,
+                message: "Token is missing"
+            });
         }
-    
+
         try {
-          const decode = jwt.verify(token, jwt_secret);
-          req.user = decode;
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await User.findById(decoded.id);
+            if (!user) {
+                logger.warn(`Authentication failed: User not found with ID ${decoded.id}`);
+                return res.status(404).json({
+                    success: false,
+                    message: "User not found"
+                });
+            }
+            req.user = {
+                id: decoded.id,
+                _id: user._id, 
+                email: decoded.email,
+                role: user.role 
+            };
+            
+            logger.debug(`User object set in request: ${JSON.stringify(req.user)}`);
+            
+            next();
         } catch (err) {
-          return res.status(401).send({
-            success: false,
-            message: "Token is invalid"
-          });
+            logger.warn(`Authentication failed: Invalid token - ${err.message}`);
+            return res.status(401).json({
+                success: false,
+                message: "Token is invalid"
+            });
         }
-        next();
     } catch (error) {
-        return res.status(401).send({
-          success: false,
-          message: "Some error occurred while authenticating."
+        logger.error(`Authentication error: ${error.message}`);
+        return res.status(401).json({
+            success: false,
+            message: "Authentication failed"
         });
     }
 };
 
-const admin = (req, res, next) => {
-  try {
-    const userDetails = User.findOne({ email: req.user.email });
 
-    if (userDetails.role !== "admin") {
+exports.isAdmin = async (req, res, next) => {
+  try {
+    logger.info(`Checking if user ${req.user.email} is an admin`);
+    
+    if (!req.user) {
+      logger.warn('Admin check failed: No user in request');
       return res.status(401).json({
         success: false,
-        message: "You are not authorized as a admin to access this route"
+        message: "Not authenticated"
       });
     }
+    
+    logger.info(`User role: ${req.user.role}`);
+    
+    if (req.user.role !== 'admin') {
+      logger.warn(`Authorization failed: User ${req.user.email} is not an admin`);
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized as an admin to access this route"
+      });
+    }
+    
+    logger.debug(`User ${req.user.email} authorized as admin`);
     next();
   } catch (error) {
-    return res.status(401).send({
+    logger.error(`Admin authorization error: ${error.message}`);
+    return res.status(500).json({
       success: false,
       message: "Some error occurred while authenticating the admin"
     });
   }
 };
 
-module.exports = { protect, admin }; 
+exports.protect = exports.auth;
+exports.admin = exports.isAdmin; 

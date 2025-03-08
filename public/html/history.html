@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan History - DocScan</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar (same as dashboard.html) -->
+        <aside class="sidebar">
+            <!-- Sidebar content (same as dashboard.html) -->
+        </aside>
+
+        <main class="main-content">
+            <!-- Header (same as dashboard.html) -->
+            <header class="dashboard-header">
+                <!-- Header content (same as dashboard.html) -->
+            </header>
+
+            <div class="dashboard-content">
+                <div class="page-header">
+                    <h1>Scan History</h1>
+                    <div class="page-actions">
+                        <div class="search-container">
+                            <input type="text" placeholder="Search history..." id="history-search">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <a href="scan.html" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> New Scan
+                        </a>
+                    </div>
+                </div>
+
+                <div class="history-container">
+                    <div class="history-filters">
+                        <div class="filter-group">
+                            <label>Filter By</label>
+                            <select id="filter-history">
+                                <option value="all">All Scans</option>
+                                <option value="ai">AI-Powered Scans</option>
+                                <option value="basic">Basic Scans</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Date Range</label>
+                            <div class="date-range">
+                                <input type="date" id="date-from">
+                                <span>to</span>
+                                <input type="date" id="date-to">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="history-list" id="history-container">
+                        <div class="empty-state" id="no-history">
+                            <i class="fas fa-history"></i>
+                            <p>No scan history yet</p>
+                            <a href="scan.html" class="btn btn-primary">Scan Document</a>
+                        </div>
+                        <!-- History items will be added here dynamically -->
+                    </div>
+
+                    <div class="pagination">
+                        <button class="pagination-btn" id="prev-page" disabled>
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </button>
+                        <div class="pagination-info">
+                            Page <span id="current-page">1</span> of <span id="total-pages">1</span>
+                        </div>
+                        <button class="pagination-btn" id="next-page" disabled>
+                            Next <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scan Details Modal -->
+    <div class="modal" id="scan-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Scan Details</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="scan-details">
+                    <div class="scan-meta">
+                        <p><i class="fas fa-calendar"></i> Date: <span id="modal-scan-date">May 10, 2025</span></p>
+                        <p><i class="fas fa-tag"></i> Type: <span id="modal-scan-type">AI-Powered Scan</span></p>
+                    </div>
+                    <div class="scanned-document">
+                        <h3>Scanned Document</h3>
+                        <div class="document-card">
+                            <div class="document-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="document-info">
+                                <h4 id="modal-document-title">document.txt</h4>
+                                <p id="modal-document-preview">Document content preview...</p>
+                                <div class="document-meta">
+                                    <span><i class="fas fa-calendar"></i> <time id="modal-document-date">May 10, 2025</time></span>
+                                    <a href="#" id="modal-view-document" class="btn btn-sm btn-outline">View Document</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="scan-matches">
+                        <h3>Matched Documents</h3>
+                        <div class="matches-list" id="modal-matches-list">
+                            <div class="empty-state hidden">
+                                <i class="fas fa-search"></i>
+                                <p>No matches found</p>
+                            </div>
+                            <!-- Matches will be added here dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/history.js"></script>
+</body>
+</html>

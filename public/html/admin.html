@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - DocScan</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar (same as dashboard.html) -->
+        <aside class="sidebar">
+            <!-- Sidebar content (same as dashboard.html) -->
+        </aside>
+
+        <main class="main-content">
+            <!-- Header (same as dashboard.html) -->
+            <header class="dashboard-header">
+                <!-- Header content (same as dashboard.html) -->
+            </header>
+
+            <div class="dashboard-content">
+                <div class="page-header">
+                    <h1>Admin Panel</h1>
+                    <p>Manage users, credits, and system settings</p>
+                </div>
+
+                <div class="admin-overview">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Total Users</h3>
+                            <p id="total-users">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Total Documents</h3>
+                            <p id="total-documents">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Pending Requests</h3>
+                            <p id="pending-requests">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Scans Today</h3>
+                            <p id="scans-today">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-tabs">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" data-tab="users">
+                            <i class="fas fa-users"></i> Users
+                        </button>
+                        <button class="tab-btn" data-tab="credit-requests">
+                            <i class="fas fa-coins"></i> Credit Requests
+                        </button>
+                        <button class="tab-btn" data-tab="analytics">
+                            <i class="fas fa-chart-bar"></i> Analytics
+                        </button>
+                        <button class="tab-btn" data-tab="settings">
+                            <i class="fas fa-cog"></i> Settings
+                        </button>
+                    </div>
+                    <div class="tabs-content">
+                        <div class="tab-pane active" id="users-tab">
+                            <div class="tab-header">
+                                <h2>User Management</h2>
+                                <div class="tab-actions">
+                                    <div class="search-container">
+                                        <input type="text" placeholder="Search users..." id="user-search">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                    <button class="btn btn-primary" id="add-user-btn">
+                                        <i class="fas fa-plus"></i> Add User
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="users-table-container">
+                                <table class="data-table" id="users-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Credits</th>
+                                            <th>Joined</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- User rows will be added here dynamically -->
+                                    </tbody>
+                                </table>
+                                <div class="empty-state" id="no-users">
+                                    <i class="fas fa-users"></i>
+                                    <p>No users found</p>
+                                </div>
+                            </div>
+                            <div class="pagination">
+                                <button class="pagination-btn" id="users-prev-page" disabled>
+                                    <i class="fas fa-chevron-left"></i> Previous
+                                </button>
+                                <div class="pagination-info">
+                                    Page <span id="users-current-page">1</span> of <span id="users-total-pages">1</span>
+                                </div>
+                                <button class="pagination-btn" id="users-next-page" disabled>
+                                    Next <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="credit-requests-tab">
+                            <div class="tab-header">
+                                <h2>Credit Requests</h2>
+                                <div class="tab-actions">
+                                    <div class="filter-group">
+                                        <select id="request-status-filter">
+                                            <option value="all">All Requests</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="approved">Approved</option>
+                                            <option value="rejected">Rejected</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="requests-table-container">
+                                <table class="data-table" id="requests-table">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Amount</th>
+                                            <th>Reason</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Request rows will be added here dynamically -->
+                                    </tbody>
+                                </table>
+                                <div class="empty-state" id="no-credit-requests">
+                                    <i class="fas fa-coins"></i>
+                                    <p>No credit requests found</p>
+                                </div>
+                            </div>
+                            <div class="pagination">
+                                <button class="pagination-btn" id="requests-prev-page" disabled>
+                                    <i class="fas fa-chevron-left"></i> Previous
+                                </button>
+                                <div class="pagination-info">
+                                    Page <span id="requests-current-page">1</span> of <span id="requests-total-pages">1</span>
+                                </div>
+                                <button class="pagination-btn" id="requests-next-page" disabled>
+                                    Next <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="analytics-tab">
+                            <div class="tab-header">
+                                <h2>Analytics</h2>
+                                <div class="tab-actions">
+                                    <div class="filter-group">
+                                        <select id="analytics-period">
+                                            <option value="7days">Last 7 Days</option>
+                                            <option value="30days">Last 30 Days</option>
+                                            <option value="90days">Last 90 Days</option>
+                                            <option value="year">Last Year</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="analytics-container">
+                                <div class="analytics-row">
+                                    <div class="analytics-card">
+                                        <h3>User Growth</h3>
+                                        <div class="chart-container">
+                                            <canvas id="user-growth-chart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="analytics-card">
+                                        <h3>Document Scans</h3>
+                                        <div class="chart-container">
+                                            <canvas id="document-scans-chart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="analytics-row">
+                                    <div class="analytics-card">
+                                        <h3>Credit Usage</h3>
+                                        <div class="chart-container">
+                                            <canvas id="credit-usage-chart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="analytics-card">
+                                        <h3>AI vs Basic Scans</h3>
+                                        <div class="chart-container">
+                                            <canvas id="scan-types-chart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="analytics-summary">
+                                    <h3>Key Metrics</h3>
+                                    <div class="metrics-grid">
+                                        <div class="metric-card">
+                                            <h4>Active Users</h4>
+                                            <p id="active-users">0</p>
+                                            <span class="trend positive">+5% <i class="fas fa-arrow-up"></i></span>
+                                        </div>
+                                        <div class="metric-card">
+                                            <h4>Avg. Scans per User</h4>
+                                            <p id="avg-scans">0</p>
+                                            <span class="trend positive">+2% <i class="fas fa-arrow-up"></i></span>
+                                        </div>
+                                        <div class="metric-card">
+                                            <h4>AI Usage Rate</h4>
+                                            <p id="ai-usage-rate">0%</p>
+                                            <span class="trend positive">+8% <i class="fas fa-arrow-up"></i></span>
+                                        </div>
+                                        <div class="metric-card">
+                                            <h4>Avg. Credits per User</h4>
+                                            <p id="avg-credits">0</p>
+                                            <span class="trend negative">-3% <i class="fas fa-arrow-down"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="settings-tab">
+                            <div class="tab-header">
+                                <h2>System Settings</h2>
+                            </div>
+                            <div class="settings-container">
+                                <div class="settings-card">
+                                    <h3>AI Configuration</h3>
+                                    <form id="ai-settings-form">
+                                        <div class="form-group">
+                                            <label for="ai-enabled">AI Matching</label>
+                                            <div class="toggle-switch">
+                                                <input type="checkbox" id="ai-enabled" name="aiEnabled" checked>
+                                                <label for="ai-enabled"></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ai-provider">AI Provider</label>
+                                            <select id="ai-provider" name="aiProvider">
+                                                <option value="huggingface">Hugging Face</option>
+                                                <option value="openai">OpenAI</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ai-threshold">Similarity Threshold</label>
+                                            <input type="range" id="ai-threshold" name="aiThreshold" min="0.1" max="0.9" step="0.1" value="0.3">
+                                            <div class="range-value"><span id="threshold-value">0.3</span></div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save AI Settings</button>
+                                    </form>
+                                </div>
+
+                                <div class="settings-card">
+                                    <h3>Credit Settings</h3>
+                                    <form id="credit-settings-form">
+                                        <div class="form-group">
+                                            <label for="default-credits">Default Credits for New Users</label>
+                                            <input type="number" id="default-credits" name="defaultCredits" min="0" value="10">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="max-request">Maximum Credits per Request</label>
+                                            <input type="number" id="max-request" name="maxRequest" min="1" value="100">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="auto-approve">Auto-Approve Requests</label>
+                                            <div class="toggle-switch">
+                                                <input type="checkbox" id="auto-approve" name="autoApprove">
+                                                <label for="auto-approve"></label>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save Credit Settings</button>
+                                    </form>
+                                </div>
+
+                                <div class="settings-card">
+                                    <h3>System Maintenance</h3>
+                                    <div class="maintenance-actions">
+                                        <button class="btn btn-outline" id="clear-cache-btn">
+                                            <i class="fas fa-broom"></i> Clear Cache
+                                        </button>
+                                        <button class="btn btn-outline" id="backup-db-btn">
+                                            <i class="fas fa-database"></i> Backup Database
+                                        </button>
+                                        <button class="btn btn-danger" id="reset-system-btn">
+                                            <i class="fas fa-exclamation-triangle"></i> Reset System
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- User Modal -->
+    <div class="modal" id="user-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="user-modal-title">Add User</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="user-form">
+                    <input type="hidden" id="user-id" name="userId">
+                    <div class="form-group">
+                        <label for="user-name">Name</label>
+                        <input type="text" id="user-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="user-email">Email</label>
+                        <input type="email" id="user-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="user-password">Password</label>
+                        <input type="password" id="user-password" name="password">
+                        <small class="form-hint">Leave blank to keep current password (for editing)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="user-role">Role</label>
+                        <select id="user-role" name="role">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="user-credits">Credits</label>
+                        <input type="number" id="user-credits" name="credits" min="0" value="10">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="cancel-user-btn">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Credit Request Modal -->
+    <div class="modal" id="credit-request-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Credit Request</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="request-details">
+                    <div class="request-info">
+                        <p><strong>User:</strong> <span id="request-user">John Doe</span></p>
+                        <p><strong>Amount:</strong> <span id="request-amount">10</span> credits</p>
+                        <p><strong>Date:</strong> <span id="request-date">May 10, 2025</span></p>
+                        <p><strong>Status:</strong> <span id="request-status" class="status-badge pending">Pending</span></p>
+                    </div>
+                    <div class="request-reason">
+                        <h3>Reason for Request</h3>
+                        <p id="request-reason-text">Need more credits for document scanning.</p>
+                    </div>
+                </div>
+                <form id="request-action-form">
+                    <input type="hidden" id="request-id" name="requestId">
+                    <div class="form-group">
+                        <label for="admin-notes">Admin Notes</label>
+                        <textarea id="admin-notes" name="adminNotes" rows="3" placeholder="Add notes about this request..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-danger" id="reject-request-btn">Reject</button>
+                        <button type="button" class="btn btn-primary" id="approve-request-btn">Approve</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
