@@ -3,6 +3,122 @@ const API_BASE_URL = 'http://localhost:3000/api';
 
 // API Service
 const api = {
+  // Base URL
+  baseUrl: API_BASE_URL,
+  
+  // Headers with authentication
+  getHeaders: function() {
+    const token = localStorage.getItem('token');
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': token ? `Bearer ${token}` : ''
+    };
+  },
+  
+  // GET request
+  get: async function(endpoint) {
+    try {
+      const response = await fetch(this.baseUrl + endpoint, {
+        method: 'GET',
+        headers: this.getHeaders()
+      });
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error(`Error fetching ${endpoint}:`, error);
+      throw error;
+    }
+  },
+  
+  // POST request
+  post: async function(endpoint, data) {
+    try {
+      const response = await fetch(this.baseUrl + endpoint, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(data)
+      });
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error(`Error posting to ${endpoint}:`, error);
+      throw error;
+    }
+  },
+  
+  // PUT request
+  put: async function(endpoint, data) {
+    try {
+      const response = await fetch(this.baseUrl + endpoint, {
+        method: 'PUT',
+        headers: this.getHeaders(),
+        body: JSON.stringify(data)
+      });
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error(`Error updating ${endpoint}:`, error);
+      throw error;
+    }
+  },
+  
+  // DELETE request
+  delete: async function(endpoint) {
+    try {
+      const response = await fetch(this.baseUrl + endpoint, {
+        method: 'DELETE',
+        headers: this.getHeaders()
+      });
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error(`Error deleting ${endpoint}:`, error);
+      throw error;
+    }
+  },
+  
+  // Upload file
+  uploadFile: async function(endpoint, formData) {
+    try {
+      const token = localStorage.getItem('token');
+      const headers = {
+        'Authorization': token ? `Bearer ${token}` : ''
+        // Note: Don't set Content-Type here, it will be set automatically with the boundary
+      };
+      
+      const response = await fetch(this.baseUrl + endpoint, {
+        method: 'POST',
+        headers: headers,
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error(`Error uploading to ${endpoint}:`, error);
+      throw error;
+    }
+  },
+  
   // Authentication
   register: async (userData) => {
     try {

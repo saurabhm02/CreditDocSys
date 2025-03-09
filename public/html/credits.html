@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credits - DocScan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --text-color: #333;
+            --text-light: #6c757d;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #e9ecef;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            width: calc(100% - 250px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .credits-badge {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Credits specific styles */
+        .credits-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .credits-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .credits-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .credits-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+        }
+
+        .credits-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .credits-label {
+            font-size: 16px;
+            color: var(--text-light);
+        }
+
+        .credits-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            gap: 8px;
+            border: none;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #4361ee, #4895ef);
+            color: white;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #3f37c9, #4361ee);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .credits-history {
+            margin-top: 20px;
+        }
+
+        .history-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+
+        .history-icon.added {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+
+        .history-icon.used {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+        }
+
+        .history-details {
+            flex: 1;
+        }
+
+        .history-action {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .history-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .history-value {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .history-value.added {
+            color: var(--success-color);
+        }
+
+        .history-value.used {
+            color: var(--danger-color);
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #d1d5db;
+        }
+
+        .empty-text {
+            margin-bottom: 20px;
+        }
+
+        .pricing-plans {
+            margin-top: 20px;
+        }
+
+        .plan-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .plan-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.1);
+        }
+
+        .plan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .plan-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .plan-price {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .plan-credits {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .plan-action {
+            text-align: right;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .main-content {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .credits-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Container -->
+        <div id="sidebar-container"></div>
+        
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1 class="page-title">Credits</h1>
+                
+                <div class="credits-badge">
+                    <i class="fas fa-coins"></i>
+                    <span id="credits-count">14</span> Credits
+                </div>
+            </div>
+            
+            <div class="credits-container">
+                <div class="credits-card">
+                    <div class="credits-info">
+                        <div class="credits-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="credits-value" id="available-credits">14</div>
+                        <div class="credits-label">Available Credits</div>
+                    </div>
+                    
+                    <div class="credits-actions">
+                        <button class="btn btn-primary" id="buy-credits-btn">
+                            <i class="fas fa-plus"></i>
+                            Buy More Credits
+                        </button>
+                        <button class="btn btn-outline" id="request-credits-btn">
+                            <i class="fas fa-envelope"></i>
+                            Request Credits
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="credits-card">
+                    <div class="credits-history">
+                        <h3 class="history-title">Credits History</h3>
+                        
+                        <div class="history-list" id="credits-history">
+                            <!-- Credits history will be added here dynamically -->
+                        </div>
+                        
+                        <div class="empty-history" id="empty-history" style="display: none;">
+                            <div class="empty-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <p class="empty-text">No credits history available</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pricing-plans">
+                <h3 class="history-title">Pricing Plans</h3>
+                
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <div class="plan-name">Basic Plan</div>
+                        <div class="plan-price">$9.99</div>
+                    </div>
+                    <div class="plan-credits">
+                        <i class="fas fa-coins"></i> 100 Credits
+                    </div>
+                    <div class="plan-action">
+                        <button class="btn btn-primary btn-sm" data-plan="basic">
+                            Purchase
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <div class="plan-name">Standard Plan</div>
+                        <div class="plan-price">$24.99</div>
+                    </div>
+                    <div class="plan-credits">
+                        <i class="fas fa-coins"></i> 300 Credits
+                    </div>
+                    <div class="plan-action">
+                        <button class="btn btn-primary btn-sm" data-plan="standard">
+                            Purchase
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <div class="plan-name">Premium Plan</div>
+                        <div class="plan-price">$49.99</div>
+                    </div>
+                    <div class="plan-credits">
+                        <i class="fas fa-coins"></i> 700 Credits
+                    </div>
+                    <div class="plan-action">
+                        <button class="btn btn-primary btn-sm" data-plan="premium">
+                            Purchase
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Request Credits Modal -->
+    <div class="modal" id="request-credits-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Request Credits</h3>
+                <button class="modal-close" id="close-request-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="request-amount" class="form-label">Number of Credits</label>
+                    <input type="number" id="request-amount" class="form-control" min="1" value="50">
+                </div>
+                <div class="form-group">
+                    <label for="request-reason" class="form-label">Reason for Request</label>
+                    <textarea id="request-reason" class="form-control" rows="4" placeholder="Please explain why you need these credits..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-request">Cancel</button>
+                <button class="btn btn-primary" id="submit-request">Submit Request</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/sidebar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            // Load user data
+            const userData = JSON.parse(localStorage.getItem('user')) || { name: 'User', role: 'user' };
+            
+            // Update user name and role
+            document.getElementById('user-name').textContent = userData.name || 'User';
+            document.getElementById('user-role').textContent = (userData.role || 'user').charAt(0).toUpperCase() + (userData.role || 'user').slice(1);
+            
+            // Update avatar with initials
+            const initials = userData.name ? userData.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'UN';
+            document.getElementById('user-avatar').textContent = initials;
+            
+            // Check if user is admin and show admin section
+            if (userData.role === 'admin') {
+            const adminSection = document.getElementById('admin-section');
+            if (adminSection) {
+                adminSection.style.display = 'block';
+            }
+        }
+            
+            // Load credits history
+            loadCreditsHistory();
+            
+            // Set up event listeners
+            document.getElementById('buy-credits-btn').addEventListener('click', function() {
+                alert('This feature is coming soon!');
+            });
+            
+            document.getElementById('request-credits-btn').addEventListener('click', function() {
+                document.getElementById('request-credits-modal').style.display = 'flex';
+            });
+            
+            document.getElementById('close-request-modal').addEventListener('click', function() {
+                document.getElementById('request-credits-modal').style.display = 'none';
+            });
+            
+            document.getElementById('cancel-request').addEventListener('click', function() {
+                document.getElementById('request-credits-modal').style.display = 'none';
+            });
+            
+            document.getElementById('submit-request').addEventListener('click', function() {
+                const amount = document.getElementById('request-amount').value;
+                const reason = document.getElementById('request-reason').value;
+                
+                if (!amount || !reason) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                // Here you would normally send the request to the server
+                // For now, we'll just show a success message
+                alert(`Your request for ${amount} credits has been submitted!`);
+                document.getElementById('request-credits-modal').style.display = 'none';
+            });
+            
+            document.querySelectorAll('[data-plan]').forEach(button => {
+                button.addEventListener('click', function() {
+                    const plan = this.getAttribute('data-plan');
+                    alert(`You selected the ${plan} plan. This feature is coming soon!`);
+                });
+            });
+            
+            function loadCreditsHistory() {
+                // This would normally fetch from the server
+                // For now, we'll use mock data
+                const mockHistory = [
+                    { type: 'added', amount: 50, reason: 'Initial credits', date: '2023-09-01T10:00:00Z' },
+                    { type: 'used', amount: 1, reason: 'Document scan', date: '2023-09-02T14:30:00Z' },
+                    { type: 'used', amount: 1, reason: 'Document scan', date: '2023-09-03T09:15:00Z' },
+                    { type: 'added', amount: 20, reason: 'Admin grant', date: '2023-09-05T11:20:00Z' },
+                    { type: 'used', amount: 1, reason: 'Document scan', date: '2023-09-06T16:45:00Z' }
+                ];
+                
+                renderCreditsHistory(mockHistory);
+            }
+            
+            function renderCreditsHistory(history) {
+                const historyContainer = document.getElementById('credits-history');
+                const emptyState = document.getElementById('empty-history');
+                
+                if (!history || history.length === 0) {
+                    historyContainer.innerHTML = '';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+                
+                emptyState.style.display = 'none';
+                
+                // Sort history by date (newest first)
+                const sortedHistory = [...history].sort((a, b) => {
+                    return new Date(b.date) - new Date(a.date);
+                });
+                
+                // Generate HTML for each history item
+                historyContainer.innerHTML = sortedHistory.map(item => {
+                    const itemDate = new Date(item.date);
+                    const formattedDate = itemDate.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    });
+                    
+                    const formattedTime = itemDate.toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    return `
+                        <div class="history-item">
+                            <div class="history-icon ${item.type}">
+                                <i class="fas fa-${item.type === 'added' ? 'plus' : 'minus'}"></i>
+                            </div>
+                            <div class="history-details">
+                                <div class="history-action">${item.reason}</div>
+                                <div class="history-meta">
+                                    <div class="meta-item">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>${formattedDate}</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span>${formattedTime}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="history-value ${item.type}">
+                                ${item.type === 'added' ? '+' : '-'}${item.amount}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        });
+    </script>
+    <!-- Add this before the closing body tag -->
+    <script src="/js/admin-visibility.js"></script>
+</body>
+</html> 

@@ -4,65 +4,462 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - DocScan</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/auth.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --text-color: #333;
+            --text-light: #6c757d;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #e9ecef;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--secondary-color);
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-header {
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(to right, #4361ee, #4895ef);
+            color: white;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            display: inline-block;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .auth-header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+
+        .auth-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .input-wrapper .toggle-password {
+            left: auto;
+            right: 15px;
+            cursor: pointer;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #f9fafc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            background-color: white;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 8px;
+        }
+
+        .forgot-password a {
+            font-size: 14px;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .checkbox-wrapper label {
+            font-size: 14px;
+            color: var(--text-color);
+            margin-bottom: 0;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #4361ee, #4895ef);
+            color: white;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #3f37c9, #4361ee);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn-primary::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn-primary:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+
+        .auth-footer {
+            text-align: center;
+            padding: 20px 30px;
+            border-top: 1px solid var(--border-color);
+            font-size: 14px;
+            color: var(--text-light);
+            background-color: #f9fafc;
+        }
+
+        .error-message {
+            color: var(--danger-color);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+            animation: shake 0.5s ease;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: rgba(244, 67, 54, 0.1);
+            margin-bottom: 15px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @media (max-width: 576px) {
+            .auth-container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .auth-header, .auth-body, .auth-footer {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <a href="index.html" class="logo">DocScan</a>
-                <h2>Welcome Back</h2>
-                <p>Log in to your DocScan account</p>
-            </div>
-            <div class="auth-body">
-                <form id="login-form">
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <div class="input-icon">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" id="email" name="email" placeholder="Enter your email" required>
-                        </div>
+        <div class="auth-header">
+            <a href="/" class="logo">DocScan</a>
+            <h1>Welcome Back</h1>
+            <p>Log in to your DocScan account</p>
+        </div>
+        
+        <div class="auth-body">
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
                     </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <div class="input-icon">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                            <i class="fas fa-eye toggle-password"></i>
-                        </div>
-                        <div class="forgot-password">
-                            <a href="forgot-password.html">Forgot password?</a>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <input type="checkbox" id="remember" name="remember">
-                            <label for="remember">Remember me</label>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Log In</button>
-                </form>
-                <div class="auth-divider">
-                    <span>or log in with</span>
                 </div>
-                <div class="social-auth">
-                    <button class="btn btn-social btn-google">
-                        <i class="fab fa-google"></i> Google
-                    </button>
-                    <button class="btn btn-social btn-github">
-                        <i class="fab fa-github"></i> GitHub
-                    </button>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                        <i class="fas fa-eye toggle-password"></i>
+                    </div>
+                    <div class="forgot-password">
+                        <a href="/forgot-password.html">Forgot password?</a>
+                    </div>
                 </div>
-            </div>
-            <div class="auth-footer">
-                <p>Don't have an account? <a href="register.html">Sign up</a></p>
-            </div>
+                
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                
+                <div class="error-message" id="login-error"></div>
+                
+                <button type="submit" class="btn btn-primary">Log In</button>
+            </form>
+        </div>
+        
+        <div class="auth-footer">
+            Don't have an account? <a href="/register.html">Sign up</a>
         </div>
     </div>
 
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedInContent = document.getElementById('logged-in-content');
+            const loggedOutContent = document.getElementById('logged-out-content');
+            
+            if (Auth.isLoggedIn()) {
+                // Show content for logged-in users
+                if (loggedInContent) loggedInContent.style.display = 'block';
+                if (loggedOutContent) loggedOutContent.style.display = 'none';
+                
+                // Update user info if needed
+                const user = Auth.getUser();
+                if (user) {
+                    const userNameElements = document.querySelectorAll('.user-name');
+                    userNameElements.forEach(el => {
+                        if (el) el.textContent = user.name;
+                    });
+                }
+            } else {
+                // Show content for logged-out users
+                if (loggedInContent) loggedInContent.style.display = 'none';
+                if (loggedOutContent) loggedOutContent.style.display = 'block';
+            }
+            
+            // Toggle password visibility
+            const togglePassword = document.querySelector('.toggle-password');
+            const passwordInput = document.getElementById('password');
+            
+            if (togglePassword && passwordInput) {
+                togglePassword.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            }
+            
+            // Form submission
+            const loginForm = document.getElementById('login-form');
+            const loginError = document.getElementById('login-error');
+            
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    // Reset errors
+                    loginError.style.display = 'none';
+                    
+                    // Get form values
+                    const email = document.getElementById('email').value;
+                    const password = passwordInput.value;
+                    const remember = document.getElementById('remember').checked;
+                    
+                    // Validate form
+                    if (!email || !password) {
+                        loginError.textContent = 'Email and password are required';
+                        loginError.style.display = 'block';
+                        return;
+                    }
+                    
+                    try {
+                        // Show loading state
+                        const submitButton = loginForm.querySelector('button[type="submit"]');
+                        submitButton.disabled = true;
+                        submitButton.textContent = 'Logging In...';
+                        
+                        // Make API request
+                        const response = await fetch('/api/auth/login', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                email,
+                                password,
+                                remember
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                            // Save token and user data
+                            localStorage.setItem('token', data.token);
+                            localStorage.setItem('user', JSON.stringify(data.user));
+                            
+                            // Show success message briefly before redirect
+                            loginError.textContent = 'Login successful! Redirecting...';
+                            loginError.style.display = 'block';
+                            loginError.style.color = 'var(--success-color)';
+                            loginError.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+                            
+                            // Redirect to dashboard after a short delay
+                            setTimeout(() => {
+                                window.location.href = '/dashboard.html';
+                            }, 1000);
+                        } else {
+                            loginError.textContent = data.message || 'Invalid email or password';
+                            loginError.style.display = 'block';
+                            submitButton.disabled = false;
+                            submitButton.textContent = 'Log In';
+                        }
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        loginError.textContent = 'An error occurred during login. Please try again.';
+                        loginError.style.display = 'block';
+                        
+                        const submitButton = loginForm.querySelector('button[type="submit"]');
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Log In';
+                    }
+                });
+            }
+            
+            // Auto-focus the email field
+            const emailInput = document.getElementById('email');
+            if (emailInput) {
+                emailInput.focus();
+            }
+            
+            // Handle Enter key press
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && document.activeElement.tagName !== 'BUTTON') {
+                    e.preventDefault();
+                    const submitButton = document.querySelector('button[type="submit"]');
+                    if (submitButton) {
+                        submitButton.click();
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

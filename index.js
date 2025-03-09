@@ -71,9 +71,20 @@ app.use('/api/documents', require('./src/routes/documentRoutes'));
 app.use('/api/credits', require('./src/routes/creditRoutes'));
 app.use('/api/admin', require('./src/routes/analyticsRoutes'));
 
-// Serve HTML files from the html directory
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
+});
+
+app.get('/scan', (req, res) => {
+  res.redirect('/scan.html');
+});
+
+app.get('/upload', (req, res) => {
+  res.redirect('/scan.html');
+});
+
+app.get('/documents', (req, res) => {
+  res.redirect('/documents.html');
 });
 
 // Handle routes for other HTML files
@@ -82,16 +93,13 @@ app.get('/:page', (req, res) => {
   const htmlFile = page.endsWith('.html') ? page : `${page}.html`;
   const filePath = path.join(__dirname, 'public', 'html', htmlFile);
   
-  // Check if file exists
   if (fs.existsSync(filePath)) {
     res.sendFile(filePath);
   } else {
-    // If page doesn't exist, redirect to 404 or home
     res.status(404).sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
   }
 });
 
-// Error handler
 app.use((err, req, res, next) => {
   logger.error(`Unhandled error: ${err.message}`);
   logger.error(err.stack);
@@ -106,13 +114,11 @@ app.use((err, req, res, next) => {
 logger.info('Connecting to MongoDB...');
 connectDB()
   .then(() => {
-    // Start server only after successful DB connection
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
       logger.info(`Server running on port ${PORT}`);
     });
-    
-    // Schedule daily credit reset
+  
     logger.info('Setting up daily credit reset cron job');
     cron.schedule('0 0 * * *', async () => {
       try {
@@ -129,7 +135,6 @@ connectDB()
       }
     });
 
-    // Ensure storage directories
     ensureStorageDirectories();
   })
   .catch(err => {
@@ -137,7 +142,6 @@ connectDB()
     process.exit(1);
   });
 
-// Graceful shutdown
 process.on('SIGINT', async () => {
   logger.info('Shutting down gracefully...');
   
@@ -155,8 +159,7 @@ process.on('SIGINT', async () => {
       logger.error(`Error closing Redis connection: ${error.message}`);
     }
   }
-  
-  // Close MongoDB connection
+
   try {
     await mongoose.connection.close();
     logger.info('MongoDB connection closed');

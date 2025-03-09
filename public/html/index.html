@@ -6,6 +6,31 @@
   <title>DocScan - AI-Powered Document Scanner</title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script>
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    
+    // If user is logged in, redirect to dashboard
+    if (token) {
+        // Check if we came from a specific page
+        const referrer = document.referrer;
+        
+        if (referrer.includes('/scan.html')) {
+            window.location.href = '/dashboard.html';
+        } else if (referrer.includes('/credits.html')) {
+            window.location.href = '/credits.html';
+        } else if (referrer.includes('/documents.html')) {
+            window.location.href = '/documents.html';
+        } else if (referrer.includes('/history.html')) {
+            window.location.href = '/history.html';
+        } else {
+            window.location.href = '/dashboard.html';
+        }
+    } else {
+        // If not logged in, redirect to login
+        window.location.href = '/login.html';
+    }
+  </script>
 </head>
 <body>
   <header>

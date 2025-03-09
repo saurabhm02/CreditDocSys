@@ -4,80 +4,536 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - DocScan</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/auth.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --text-color: #333;
+            --text-light: #6c757d;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #e9ecef;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--secondary-color);
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 450px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(to right, #4361ee, #4895ef);
+            color: white;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1now0px;
+            display: inline-block;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .auth-header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+
+        .auth-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .input-wrapper .toggle-password {
+            left: auto;
+            right: 15px;
+            cursor: pointer;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #f9fafc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            background-color: white;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            height: 5px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            background-color: var(--danger-color);
+            transition: all 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 5px;
+            display: block;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            margin-right: 10px;
+            margin-top: 4px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .checkbox-wrapper label {
+            font-size: 14px;
+            color: var(--text-color);
+            margin-bottom: 0;
+            line-height: 1.4;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #4361ee, #4895ef);
+            color: white;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #3f37c9, #4361ee);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn-primary::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn-primary:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+
+        .auth-footer {
+            text-align: center;
+            padding: 20px 30px;
+            border-top: 1px solid var(--border-color);
+            font-size: 14px;
+            color: var(--text-light);
+            background-color: #f9fafc;
+        }
+
+        .error-message {
+            color: var(--danger-color);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @media (max-width: 576px) {
+            .auth-container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .auth-header, .auth-body, .auth-footer {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <a href="index.html" class="logo">DocScan</a>
-                <h2>Create an Account</h2>
-                <p>Join DocScan to start scanning and matching documents</p>
-            </div>
-            <div class="auth-body">
-                <form id="register-form">
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <div class="input-icon">
-                            <i class="fas fa-user"></i>
-                            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
-                        </div>
+        <div class="auth-header">
+            <a href="/" class="logo">DocScan</a>
+            <h2>Create an Account</h2>
+            <p>Join DocScan to start scanning and matching documents</p>
+        </div>
+        
+        <div class="auth-body">
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="name" class="form-control" placeholder="Enter your full name" required>
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <div class="input-icon">
-                            <i class="fas fa-envelope"></i>
-                            <input type="email" id="email" name="email" placeholder="Enter your email" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <div class="input-icon">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="password" name="password" placeholder="Create a password" required>
-                            <i class="fas fa-eye toggle-password"></i>
-                        </div>
-                        <div class="password-strength">
-                            <div class="strength-meter"></div>
-                            <span class="strength-text">Password strength</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirm-password">Confirm Password</label>
-                        <div class="input-icon">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <input type="checkbox" id="terms" name="terms" required>
-                            <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
-                </form>
-                <div class="auth-divider">
-                    <span>or sign up with</span>
                 </div>
-                <div class="social-auth">
-                    <button class="btn btn-social btn-google">
-                        <i class="fab fa-google"></i> Google
-                    </button>
-                    <button class="btn btn-social btn-github">
-                        <i class="fab fa-github"></i> GitHub
-                    </button>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                    </div>
                 </div>
-            </div>
-            <div class="auth-footer">
-                <p>Already have an account? <a href="login.html">Log in</a></p>
-            </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" class="form-control" placeholder="Create a password" required>
+                        <i class="fas fa-eye toggle-password"></i>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-meter"></div>
+                    </div>
+                    <span class="strength-text">Password strength</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirm-password" class="form-control" placeholder="Confirm your password" required>
+                    </div>
+                    <div class="error-message" id="password-error"></div>
+                </div>
+                
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                </div>
+                
+                <div class="error-message" id="form-error"></div>
+                
+                <button type="submit" class="btn btn-primary">Create Account</button>
+            </form>
+        </div>
+        
+        <div class="auth-footer">
+            Already have an account? <a href="/login.html">Log in</a>
         </div>
     </div>
 
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
+    <script>
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                // User is already logged in, redirect to dashboard
+                window.location.href = '/dashboard.html';
+            }
+            
+            // Toggle password visibility
+            const togglePassword = document.querySelector('.toggle-password');
+            const passwordInput = document.getElementById('password');
+            
+            if (togglePassword && passwordInput) {
+                togglePassword.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            }
+            
+            // Password strength meter
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function() {
+                    const strength = calculatePasswordStrength(this.value);
+                    updatePasswordStrength(strength);
+                });
+            }
+            
+            // Form validation
+            const registerForm = document.getElementById('register-form');
+            const confirmPassword = document.getElementById('confirm-password');
+            const passwordError = document.getElementById('password-error');
+            const formError = document.getElementById('form-error');
+            
+            if (confirmPassword) {
+                confirmPassword.addEventListener('input', function() {
+                    if (this.value !== passwordInput.value) {
+                        passwordError.textContent = 'Passwords do not match';
+                        passwordError.style.display = 'block';
+                    } else {
+                        passwordError.style.display = 'none';
+                    }
+                });
+            }
+            
+            if (registerForm) {
+                registerForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    // Reset errors
+                    formError.style.display = 'none';
+                    
+                    // Get form values
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const password = passwordInput.value;
+                    const confirmPasswordValue = confirmPassword.value;
+                    const termsChecked = document.getElementById('terms').checked;
+                    
+                    // Validate form
+                    if (!name || !email || !password || !confirmPasswordValue) {
+                        formError.textContent = 'All fields are required';
+                        formError.style.display = 'block';
+                        return;
+                    }
+                    
+                    if (password !== confirmPasswordValue) {
+                        passwordError.textContent = 'Passwords do not match';
+                        passwordError.style.display = 'block';
+                        return;
+                    }
+                    
+                    if (!termsChecked) {
+                        formError.textContent = 'You must agree to the Terms of Service and Privacy Policy';
+                        formError.style.display = 'block';
+                        return;
+                    }
+                    
+                    try {
+                        // Show loading state
+                        const submitButton = registerForm.querySelector('button[type="submit"]');
+                        submitButton.disabled = true;
+                        submitButton.textContent = 'Creating Account...';
+                        
+                        // Make API request
+                        const response = await fetch('/api/auth/register', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                name,
+                                email,
+                                password
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok) {
+                            // Save token and user data
+                            localStorage.setItem('token', data.token);
+                            localStorage.setItem('user', JSON.stringify(data.user));
+                            
+                            // Redirect to dashboard
+                            window.location.href = '/dashboard.html';
+                        } else {
+                            formError.textContent = data.message || 'Registration failed';
+                            formError.style.display = 'block';
+                            submitButton.disabled = false;
+                            submitButton.textContent = 'Create Account';
+                        }
+                    } catch (error) {
+                        console.error('Registration error:', error);
+                        formError.textContent = 'An error occurred during registration. Please try again.';
+                        formError.style.display = 'block';
+                        
+                        const submitButton = registerForm.querySelector('button[type="submit"]');
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Create Account';
+                    }
+                });
+            }
+            
+            // Helper functions
+            function calculatePasswordStrength(password) {
+                let strength = 0;
+                
+                // Length check
+                if (password.length >= 8) strength += 1;
+                if (password.length >= 12) strength += 1;
+                
+                // Character type checks
+                if (/[a-z]/.test(password)) strength += 1; // lowercase
+                if (/[A-Z]/.test(password)) strength += 1; // uppercase
+                if (/[0-9]/.test(password)) strength += 1; // numbers
+                if (/[^a-zA-Z0-9]/.test(password)) strength += 1; // special characters
+                
+                return Math.min(strength, 5); // Max strength is 5
+            }
+            
+            function updatePasswordStrength(strength) {
+                const strengthMeter = document.querySelector('.strength-meter');
+                const strengthText = document.querySelector('.strength-text');
+                
+                if (!strengthMeter || !strengthText) return;
+                
+                // Update meter width
+                strengthMeter.style.width = `${(strength / 5) * 100}%`;
+                
+                // Update color and text
+                let color, text;
+                
+                switch (strength) {
+                    case 0:
+                    case 1:
+                        color = '#f44336'; // red
+                        text = 'Very Weak';
+                        break;
+                    case 2:
+                        color = '#ff9800'; // orange
+                        text = 'Weak';
+                        break;
+                    case 3:
+                        color = '#ffeb3b'; // yellow
+                        text = 'Moderate';
+                        break;
+                    case 4:
+                        color = '#4caf50'; // green
+                        text = 'Strong';
+                        break;
+                    case 5:
+                        color = '#2e7d32'; // dark green
+                        text = 'Very Strong';
+                        break;
+                }
+                
+                strengthMeter.style.backgroundColor = color;
+                strengthText.textContent = `Password strength: ${text}`;
+                strengthText.style.color = color;
+            }
+        });
+    </script>
 </body>
 </html>

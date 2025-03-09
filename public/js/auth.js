@@ -1,3 +1,116 @@
+// Authentication related functions
+const auth = {
+    // Check if user is logged in
+    isLoggedIn: function() {
+        return !!localStorage.getItem('token');
+    },
+    
+    // Get user data
+    getUserData: function() {
+        return JSON.parse(localStorage.getItem('user')) || { name: 'User', role: 'user', credits: 14 };
+    },
+    
+    // Get auth token
+    getToken: function() {
+        return localStorage.getItem('token');
+    },
+    
+    // Login user
+    login: function(token, userData) {
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
+    },
+    
+    // Logout user
+    logout: function() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login.html';
+    },
+    
+    // Update user data
+    updateUserData: function(userData) {
+        const currentData = this.getUserData();
+        localStorage.setItem('user', JSON.stringify({...currentData, ...userData}));
+    },
+    
+    // Check if token is expired
+    isTokenExpired: function() {
+        const token = this.getToken();
+        if (!token) return true;
+        
+        try {
+            // Simple check - in a real app, you'd decode the JWT and check its exp claim
+            return false;
+        } catch (e) {
+            return true;
+        }
+    },
+    
+    // Redirect if not logged in
+    requireAuth: function() {
+        if (!this.isLoggedIn() || this.isTokenExpired()) {
+            window.location.href = '/login.html';
+            return false;
+        }
+        return true;
+    }
+};
+
+// Run auth check on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Skip auth check on login and register pages
+    if (window.location.pathname.includes('login.html') || window.location.pathname.includes('register.html')) {
+        return;
+    }
+    
+    // Redirect to login if not authenticated
+    auth.requireAuth();
+});
+
+// Authentication utility functions
+const Auth = {
+    // Check if user is logged in
+    isLoggedIn: function() {
+        return localStorage.getItem('token') !== null;
+    },
+    
+    // Get current user data
+    getUser: function() {
+        const userData = localStorage.getItem('user');
+        return userData ? JSON.parse(userData) : null;
+    },
+    
+    // Get authentication token
+    getToken: function() {
+        return localStorage.getItem('token');
+    },
+    
+    // Log out user
+    logout: function() {
+        // Clear local storage
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        
+        // Redirect to login page
+        window.location.href = '/login.html';
+    },
+    
+    // Redirect if not logged in
+    requireAuth: function() {
+        if (!this.isLoggedIn()) {
+            window.location.href = '/login.html';
+        }
+    },
+    
+    // Redirect if already logged in
+    redirectIfLoggedIn: function() {
+        if (this.isLoggedIn()) {
+            window.location.href = '/dashboard.html';
+        }
+    }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
   // Check if user is logged in
   const token = localStorage.getItem('token');
@@ -39,9 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (logoutBtn) {
     logoutBtn.addEventListener('click', function(e) {
       e.preventDefault();
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = 'login.html';
+      Auth.logout();
     });
   }
   
@@ -296,3 +407,17 @@ function showAlert(message, type = 'info') {
     }, 300);
   }, 3000);
 }
+
+// Add event listeners to logout buttons
+document.addEventListener('DOMContentLoaded', function() {
+    // Find all logout buttons
+    const logoutButtons = document.querySelectorAll('.logout-btn, #logout-button, [data-action="logout"]');
+    
+    // Add click event to each logout button
+    logoutButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            Auth.logout();
+        });
+    });
+});

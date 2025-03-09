@@ -6,10 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
   
-  // Load dashboard data
   loadDashboardData();
   
-  // Toggle sidebar on mobile
   const sidebarToggle = document.querySelector('.sidebar-toggle');
   if (sidebarToggle) {
     sidebarToggle.addEventListener('click', function() {
@@ -18,26 +16,21 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Load dashboard data
 async function loadDashboardData() {
   try {
-    // Get user data
     const userData = JSON.parse(localStorage.getItem('user'));
     if (userData) {
       updateUserUI(userData);
     }
     
-    // Load documents
     const documents = await api.getDocuments();
     updateDocumentsCount(documents.length);
     updateRecentDocuments(documents.slice(0, 5));
     
-    // Load scan history
     const history = await api.getDocumentHistory();
     updateScansCount(history.length);
     updateRecentScans(history.slice(0, 5));
     
-    // Calculate matches count
     let matchesCount = 0;
     history.forEach(scan => {
       if (scan.matchResults && scan.matchResults.length) {
@@ -52,7 +45,6 @@ async function loadDashboardData() {
   }
 }
 
-// Update documents count
 function updateDocumentsCount(count) {
   const documentsCountEl = document.getElementById('documents-count');
   if (documentsCountEl) {
@@ -60,7 +52,6 @@ function updateDocumentsCount(count) {
   }
 }
 
-// Update scans count
 function updateScansCount(count) {
   const scansCountEl = document.getElementById('scans-count');
   if (scansCountEl) {
@@ -68,7 +59,6 @@ function updateScansCount(count) {
   }
 }
 
-// Update matches count
 function updateMatchesCount(count) {
   const matchesCountEl = document.getElementById('matches-count');
   if (matchesCountEl) {
@@ -76,7 +66,6 @@ function updateMatchesCount(count) {
   }
 }
 
-// Update recent documents list
 function updateRecentDocuments(documents) {
   const recentDocumentsList = document.getElementById('recent-documents-list');
   const emptyState = recentDocumentsList.querySelector('.empty-state');
@@ -90,18 +79,15 @@ function updateRecentDocuments(documents) {
   
   if (emptyState) emptyState.classList.add('hidden');
   
-  // Clear existing items
   const existingItems = recentDocumentsList.querySelectorAll('.document-item');
   existingItems.forEach(item => item.remove());
   
-  // Add new items
   documents.forEach(doc => {
     const docItem = createDocumentItem(doc);
     recentDocumentsList.appendChild(docItem);
   });
 }
 
-// Create document item element
 function createDocumentItem(doc) {
   const docItem = document.createElement('div');
   docItem.className = 'document-item';
@@ -129,7 +115,6 @@ function createDocumentItem(doc) {
   return docItem;
 }
 
-// Update recent scans list
 function updateRecentScans(scans) {
   const recentScansList = document.getElementById('recent-scans-list');
   const emptyState = recentScansList.querySelector('.empty-state');
@@ -143,7 +128,6 @@ function updateRecentScans(scans) {
   
   if (emptyState) emptyState.classList.add('hidden');
   
-  // Clear existing items
   const existingItems = recentScansList.querySelectorAll('.scan-item');
   existingItems.forEach(item => item.remove());
   
@@ -154,7 +138,6 @@ function updateRecentScans(scans) {
   });
 }
 
-// Create scan item element
 function createScanItem(scan) {
   const scanItem = document.createElement('div');
   scanItem.className = 'scan-item';

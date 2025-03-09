@@ -4,140 +4,806 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scan Document - DocScan</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --text-color: #333;
+            --text-light: #6c757d;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #e9ecef;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 230px;
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .logo {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+            font-size: 24px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+
+        .nav-menu {
+            padding: 10px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+            color: var(--primary-color);
+        }
+
+        .nav-item.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .nav-item i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .admin-section {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .admin-section-title {
+            padding: 0 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .user-section {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: var(--card-bg);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            color: var(--danger-color);
+            text-decoration: none;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+
+        .logout-btn i {
+            margin-right: 10px;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 230px;
+            padding: 20px;
+            width: calc(100% - 230px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .credits-badge {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-section {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .upload-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .upload-description {
+            color: var(--text-light);
+            margin-bottom: 25px;
+        }
+
+        .upload-form {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .browse-btn {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .file-name {
+            display: block;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .ai-option {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .ai-checkbox {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .scan-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        .scan-btn:disabled {
+            background-color: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .options-section {
+            margin: 25px 0;
+            padding: 0;
+            box-shadow: none;
+            background-color: transparent;
+        }
+
+        .options-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: left;
+            color: var(--text-color);
+        }
+
+        .option-card {
+            background-color: #f8f9ff;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            text-align: left;
+            position: relative;
+        }
+
+        .option-checkbox {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            margin-top: 3px;
+        }
+
+        .option-details {
+            flex: 1;
+        }
+
+        .option-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .option-description {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .option-cost {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+
+        .credits-section {
+            background-color: #fffbf0;
+            border-radius: 8px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .credits-icon {
+            color: #ffc107;
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .credits-info {
+            flex: 1;
+        }
+
+        .credits-text {
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .credits-count {
+            color: #4361ee;
+            font-weight: 700;
+        }
+
+        .scan-action-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .scan-action-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .scan-action-btn:disabled {
+            background-color: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .upload-status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+
+        .upload-status.success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+
+        .upload-status.error {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar .logo span, 
+            .sidebar .nav-item span, 
+            .sidebar .user-details,
+            .sidebar .logout-btn span,
+            .sidebar .admin-section-title {
+                display: none;
+            }
+            
+            .sidebar .nav-item {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .sidebar .nav-item i {
+                margin-right: 0;
+                font-size: 20px;
+            }
+            
+            .sidebar .user-info {
+                justify-content: center;
+            }
+            
+            .sidebar .user-avatar {
+                margin-right: 0;
+            }
+            
+            .sidebar .logout-btn {
+                justify-content: center;
+            }
+            
+            .sidebar .logout-btn i {
+                margin-right: 0;
+            }
+            
+            .main-content {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <!-- Sidebar (same as dashboard.html) -->
-        <aside class="sidebar">
-            <!-- Sidebar content (same as dashboard.html) -->
-        </aside>
-
-        <main class="main-content">
-            <!-- Header (same as dashboard.html) -->
-            <header class="dashboard-header">
-                <!-- Header content (same as dashboard.html) -->
-            </header>
-
-            <div class="dashboard-content">
-                <div class="page-header">
-                    <h1>Scan Document</h1>
-                    <p>Upload a document to scan and find matches</p>
-                </div>
-
-                <div class="scan-container">
-                    <div class="upload-section">
-                        <div class="upload-card">
-                            <div class="upload-header">
-                                <h2>Upload Document</h2>
-                                <p>Supported formats: .txt, .md, .csv</p>
-                            </div>
-                            <div class="upload-body">
-                                <form id="scan-form">
-                                    <div class="file-upload-container">
-                                        <div class="file-upload-area" id="drop-area">
-                                            <input type="file" id="file-input" name="document" accept=".txt,.text,.md,.csv" hidden>
-                                            <div class="upload-icon">
-                                                <i class="fas fa-cloud-upload-alt"></i>
-                                            </div>
-                                            <div class="upload-text">
-                                                <p>Drag & drop your file here</p>
-                                                <p>or</p>
-                                                <button type="button" id="browse-btn" class="btn btn-outline">Browse Files</button>
-                                            </div>
-                                        </div>
-                                        <div class="selected-file hidden" id="selected-file">
-                                            <div class="file-info">
-                                                <i class="fas fa-file-alt"></i>
-                                                <div class="file-details">
-                                                    <span class="file-name">document.txt</span>
-                                                    <span class="file-size">0 KB</span>
-                                                </div>
-                                            </div>
-                                            <button type="button" class="btn btn-icon" id="remove-file">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="scan-options">
-                                        <h3>Scan Options</h3>
-                                        <div class="form-group">
-                                            <div class="checkbox">
-                                                <input type="checkbox" id="use-ai" name="useAI" checked>
-                                                <label for="use-ai">Use AI for better matching (1 credit)</label>
-                                            </div>
-                                        </div>
-                                        <div class="credits-info">
-                                            <p>You have <span id="available-credits">10</span> credits available</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-actions">
-                                        <button type="submit" class="btn btn-primary btn-block" id="scan-btn" disabled>
-                                            <i class="fas fa-search"></i> Scan Document
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="results-section hidden" id="results-section">
-                        <div class="results-card">
-                            <div class="results-header">
-                                <h2>Scan Results</h2>
-                                <div class="scan-info">
-                                    <span class="scan-date">Scanned on <time id="scan-date">May 10, 2025</time></span>
-                                    <span class="scan-type">AI-powered scan</span>
-                                </div>
-                            </div>
-                            <div class="results-body">
-                                <div class="document-preview">
-                                    <h3>Document Details</h3>
-                                    <div class="document-card">
-                                        <div class="document-icon">
-                                            <i class="fas fa-file-alt"></i>
-                                        </div>
-                                        <div class="document-info">
-                                            <h4 id="document-title">document.txt</h4>
-                                            <p id="document-preview">Document content preview...</p>
-                                            <div class="document-meta">
-                                                <span><i class="fas fa-calendar"></i> <time id="document-date">May 10, 2025</time></span>
-                                                <a href="#" id="view-document" class="btn btn-sm btn-outline">View Document</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="matches-container">
-                                    <h3>Similar Documents</h3>
-                                    <div class="matches-list" id="matches-list">
-                                        <div class="empty-state hidden">
-                                            <i class="fas fa-search"></i>
-                                            <p>No similar documents found</p>
-                                        </div>
-                                        <!-- Matches will be added here dynamically -->
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="results-footer">
-                                <button class="btn btn-outline" id="new-scan-btn">
-                                    <i class="fas fa-plus"></i> New Scan
-                                </button>
-                                <button class="btn btn-primary" id="save-results-btn">
-                                    <i class="fas fa-save"></i> Save Results
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-file-alt"></i>
+                <span>DocScan</span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="/dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/documents.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Documents</span>
+                </a>
+                <a href="/scan.html" class="nav-item active">
+                    <i class="fas fa-search"></i>
+                    <span>Scan Document</span>
+                </a>
+                <a href="/history.html" class="nav-item">
+                    <i class="fas fa-history"></i>
+                    <span>Scan History</span>
+                </a>
+                <a href="/credits.html" class="nav-item">
+                    <i class="fas fa-coins"></i>
+                    <span>Credits</span>
+                </a>
+                
+                <div id="admin-section" class="admin-section" style="display: none;">
+                    <div class="nav-section-title">ADMIN</div>
+                    <a href="/admin.html" class="nav-item admin-panel-link">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Admin Panel</span>
+                    </a>
                 </div>
             </div>
-        </main>
+            
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-avatar" id="user-avatar">UN</div>
+                    <div class="user-details">
+                        <div class="user-name" id="user-name">User</div>
+                        <div class="user-role" id="user-role">User</div>
+                    </div>
+                </div>
+                <a href="#" class="logout-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1 class="page-title">Scan Document</h1>
+                <div class="credits-badge">
+                    <i class="fas fa-coins"></i>
+                    <span id="credits-count">20 Credits</span>
+                </div>
+            </div>
+            
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <h2 class="upload-title">Upload Document</h2>
+                <p class="upload-description">Upload a document to scan and find matches in our database</p>
+                
+                <form id="upload-form">
+                    <div class="upload-form">
+                        <input type="file" id="document-file" style="display: none;" accept=".txt,.text,.md,.csv,text/plain">
+                        <div id="file-display">
+                            <button type="button" id="browse-btn" class="browse-btn">
+                                <i class="fas fa-file-upload"></i>
+                                Browse Files
+                            </button>
+                            <span id="file-name" class="file-name" style="display: none;"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Scan Options section with fixed design -->
+                    <div class="options-section">
+                        <h2 class="options-title">Scan Options</h2>
+                        
+                        <div class="option-card">
+                            <input type="checkbox" id="ai-option" class="option-checkbox" checked>
+                            <div class="option-details">
+                                <h3 class="option-title">Use AI for better matching</h3>
+                                <p class="option-description">Enhance scan results with AI-powered semantic matching</p>
+                            </div>
+                            <div class="option-cost">1 credit</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Credits Section -->
+                    <div class="credits-section">
+                        <div class="credits-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="credits-info">
+                            <p class="credits-text">You have <span id="credits-available" class="credits-count">16</span> credits available</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Scan button -->
+                    <button type="submit" id="scan-btn" class="scan-action-btn">
+                        <i class="fas fa-search"></i>
+                        <span>Scan Document</span>
+                    </button>
+                    
+                    <div id="upload-status" class="upload-status"></div>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/documents.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            // Load user data
+            const userData = JSON.parse(localStorage.getItem('user')) || { name: 'User', role: 'user', credits: 20 };
+            
+            // Update user name and role
+            document.getElementById('user-name').textContent = userData.name || 'User';
+            document.getElementById('user-role').textContent = (userData.role || 'user').charAt(0).toUpperCase() + (userData.role || 'user').slice(1);
+            
+            // Update avatar with initials
+            const initials = userData.name ? userData.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'UN';
+            document.getElementById('user-avatar').textContent = initials;
+            
+            // Update credits display
+            const credits = userData.credits || 20;
+            document.getElementById('credits-count').textContent = `${credits} Credits`;
+            document.getElementById('credits-available').textContent = credits;
+            
+            // Check if user is admin and show admin section
+            if (userData.role === 'admin') {
+                const adminSection = document.getElementById('admin-section');
+                if (adminSection) {
+                    adminSection.style.display = 'block';
+                }
+            }
+            
+            // Set up logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/login.html';
+            });
+            
+            // File upload functionality
+            const fileInput = document.getElementById('document-file');
+            const fileNameDisplay = document.getElementById('file-name');
+            const uploadForm = document.getElementById('upload-form');
+            const aiOption = document.getElementById('ai-option');
+            const scanBtn = document.getElementById('scan-btn');
+            const uploadStatus = document.getElementById('upload-status');
+            const browseBtn = document.getElementById('browse-btn');
+            
+            // Make sure the browse button triggers the file input
+            browseBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                fileInput.click();
+            });
+            
+            // Handle file selection
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    const fileName = this.files[0].name;
+                    fileNameDisplay.textContent = fileName;
+                    fileNameDisplay.style.display = 'block';
+                    browseBtn.textContent = 'Change File';
+                    scanBtn.disabled = false;
+                } else {
+                    fileNameDisplay.textContent = '';
+                    fileNameDisplay.style.display = 'none';
+                    browseBtn.textContent = 'Browse Files';
+                    scanBtn.disabled = true;
+                }
+            });
+            
+            // Handle form submission
+            uploadForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    alert('Please select a file to upload');
+                    fileInput.click(); // Open file dialog if no file selected
+                    return;
+                }
+                
+                const file = fileInput.files[0];
+                
+                // Check if file is a text file
+                const allowedExtensions = ['.txt', '.text', '.md', '.csv'];
+                const fileExt = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+                
+                if (!allowedExtensions.includes(fileExt) && file.type !== 'text/plain') {
+                    alert('Only text files are allowed (.txt, .text, .md, .csv)');
+                    return;
+                }
+                
+                // Show loading state
+                scanBtn.disabled = true;
+                scanBtn.innerHTML = '<span class="spinner"></span> Scanning...';
+                uploadStatus.className = 'upload-status';
+                uploadStatus.textContent = 'Uploading document...';
+                uploadStatus.style.display = 'block';
+                
+                try {
+                    await scanDocument(file);
+                } catch (error) {
+                    console.error('Error uploading document:', error);
+                    uploadStatus.className = 'upload-status error';
+                    uploadStatus.textContent = 'Error: ' + (error.message || 'Failed to upload document');
+                    
+                    // Reset button
+                    scanBtn.disabled = false;
+                    scanBtn.innerHTML = '<i class="fas fa-search"></i> Scan Document';
+                }
+            });
+            
+            async function scanDocument(file) {
+                const formData = new FormData();
+                formData.append('document', file);
+                
+                // Get the AI checkbox value from the original checkbox
+                const useAI = aiOption.checked;
+                
+                // Use the correct API endpoint for document scan with useAI parameter
+                let url = '/api/documents/scan';
+                if (useAI) {
+                    url += '?useAI=true';
+                }
+                
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: formData
+                    });
+                    
+                    if (!response.ok) {
+                        let errorMessage = 'Upload failed';
+                        try {
+                            const errorData = await response.json();
+                            errorMessage = errorData.message || `Upload failed with status: ${response.status}`;
+                        } catch (e) {
+                            errorMessage = `Upload failed with status: ${response.status}`;
+                        }
+                        throw new Error(errorMessage);
+                    }
+                    
+                    // Check if response is JSON
+                    const contentType = response.headers.get('content-type');
+                    
+                    if (contentType && contentType.includes('application/json')) {
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            // Show success message
+                            uploadStatus.className = 'upload-status success';
+                            uploadStatus.textContent = 'Document uploaded and scanned successfully!';
+                            
+                            // Update credits display
+                            if (data.remainingCredits !== undefined) {
+                                document.getElementById('credits-count').textContent = `${data.remainingCredits} Credits`;
+                                document.getElementById('credits-available').textContent = data.remainingCredits;
+                                
+                                // Update user data in localStorage
+                                const updatedUserData = { ...userData, credits: data.remainingCredits };
+                                localStorage.setItem('user', JSON.stringify(updatedUserData));
+                            }
+                            
+                            // Show match results if any
+                            if (data.matchResults && data.matchResults.length > 0) {
+                                uploadStatus.textContent += ` Found ${data.matchResults.length} similar documents.`;
+                            }
+                            
+                            // Reset form
+                            fileInput.value = '';
+                            fileNameDisplay.textContent = '';
+                            fileNameDisplay.style.display = 'none';
+                            browseBtn.textContent = 'Browse Files';
+                            
+                            // Reset button
+                            scanBtn.innerHTML = '<i class="fas fa-search"></i> Scan Document';
+                            scanBtn.disabled = true;
+                            
+                            // Redirect to document page after a short delay
+                            setTimeout(() => {
+                                window.location.href = '/documents.html';
+                            }, 3000);
+                        } else {
+                            throw new Error(data.message || 'Failed to scan document');
+                        }
+                        
+                        return data;
+                    } else {
+                        // Handle non-JSON response (like a redirect)
+                        window.location.href = '/documents.html';
+                    }
+                } catch (error) {
+                    console.error('Error in scanDocument:', error);
+                    throw error;
+                }
+            }
+        });
+    </script>
+
+    <!-- Add this before the closing body tag -->
+    <script src="/js/admin-visibility.js"></script>
 </body>
-</html>
+</html> 

@@ -3,408 +3,1746 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - DocScan</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/admin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Admin Dashboard - DocScan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --text-color: #333;
+            --text-light: #6c757d;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #e9ecef;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 230px;
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .logo {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+            font-size: 24px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+
+        .nav-menu {
+            padding: 10px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+            color: var(--primary-color);
+        }
+
+        .nav-item.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .nav-item i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .admin-section {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .admin-section-title {
+            padding: 0 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .user-section {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: var(--card-bg);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            color: var(--danger-color);
+            text-decoration: none;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+
+        .logout-btn i {
+            margin-right: 10px;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: 230px;
+            padding: 20px;
+            width: calc(100% - 230px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-title {
+            font-size: 16px;
+            color: var(--text-light);
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .users-icon {
+            background-color: rgba(33, 150, 243, 0.1);
+            color: var(--accent-color);
+        }
+
+        .documents-icon {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+
+        .credits-icon {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+        }
+
+        .scans-icon {
+            background-color: rgba(156, 39, 176, 0.1);
+            color: #9c27b0;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-description {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .admin-section-container {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            gap: 8px;
+            border: none;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #4361ee, #4895ef);
+            color: white;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #3f37c9, #4361ee);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--text-light);
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        tr:hover {
+            background-color: rgba(67, 97, 238, 0.02);
+        }
+
+        .user-table-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .user-table-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-table-name {
+            font-weight: 600;
+        }
+
+        .user-table-email {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-inactive {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--danger-color);
+        }
+
+        .status-pending {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(67, 97, 238, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 0;
+            color: var(--text-light);
+        }
+
+        .loading-container p {
+            margin-top: 15px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #d1d5db;
+        }
+
+        .empty-text {
+            margin-bottom: 20px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            color: var(--primary-color);
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Additional styles for improved Credits Management tab */
+        .credits-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .credits-table th {
+            background-color: #f8f9fa;
+            padding: 15px;
+            font-weight: 600;
+            color: #495057;
+            text-align: left;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .credits-table td {
+            padding: 15px;
+            vertical-align: middle;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .credits-table tr:hover {
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+        
+        .credits-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 2px;
+        }
+        
+        .user-email {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .credits-amount {
+            font-weight: 600;
+            color: #212529;
+            text-align: center;
+        }
+        
+        .reason-cell {
+            max-width: 250px;
+            color: #495057;
+        }
+        
+        .date-cell {
+            color: #6c757d;
+            white-space: nowrap;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .admin-response {
+            color: #495057;
+            font-style: italic;
+        }
+        
+        .action-cell {
+            white-space: nowrap;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-approve {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-approve:hover {
+            background-color: #218838;
+        }
+        
+        .btn-reject {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .btn-reject:hover {
+            background-color: #c82333;
+        }
+        
+        .processed-label {
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #212529;
+        }
+        
+        .add-credits-btn {
+            background: linear-gradient(to right, #4361ee, #4895ef);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(67, 97, 238, 0.1);
+        }
+        
+        .add-credits-btn:hover {
+            background: linear-gradient(to right, #3f37c9, #4361ee);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 8px rgba(67, 97, 238, 0.15);
+        }
+        
+        .add-credits-btn i {
+            font-size: 14px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .credits-table th, 
+            .credits-table td {
+                padding: 12px 10px;
+            }
+            
+            .reason-cell {
+                max-width: 150px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .credits-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .user-cell {
+                min-width: 200px;
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar .logo span, 
+            .sidebar .nav-item span, 
+            .sidebar .user-details,
+            .sidebar .logout-btn span,
+            .sidebar .admin-section-title {
+                display: none;
+            }
+            
+            .sidebar .nav-item {
+                justify-content: center;
+                padding: 15px;
+            }
+            
+            .sidebar .nav-item i {
+                margin-right: 0;
+                font-size: 20px;
+            }
+            
+            .sidebar .user-info {
+                justify-content: center;
+            }
+            
+            .sidebar .user-avatar {
+                margin-right: 0;
+            }
+            
+            .sidebar .logout-btn {
+                justify-content: center;
+            }
+            
+            .sidebar .logout-btn i {
+                margin-right: 0;
+            }
+            
+            .main-content {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 15px;
+            }
+            
+            .table-container {
+                font-size: 13px;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <!-- Sidebar (same as dashboard.html) -->
-        <aside class="sidebar">
-            <!-- Sidebar content (same as dashboard.html) -->
-        </aside>
-
-        <main class="main-content">
-            <!-- Header (same as dashboard.html) -->
-            <header class="dashboard-header">
-                <!-- Header content (same as dashboard.html) -->
-            </header>
-
-            <div class="dashboard-content">
-                <div class="page-header">
-                    <h1>Admin Panel</h1>
-                    <p>Manage users, credits, and system settings</p>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-file-alt"></i>
+                <span>DocScan</span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="/dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/documents.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Documents</span>
+                </a>
+                <a href="/scan.html" class="nav-item">
+                    <i class="fas fa-search"></i>
+                    <span>Scan Document</span>
+                </a>
+                <a href="/history.html" class="nav-item">
+                    <i class="fas fa-history"></i>
+                    <span>Scan History</span>
+                </a>
+                <a href="/credits.html" class="nav-item">
+                    <i class="fas fa-coins"></i>
+                    <span>Credits</span>
+                </a>
+                
+                <div class="admin-section">
+                    <div class="admin-section-title">Admin</div>
+                    <a href="/admin.html" class="nav-item active">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Admin Panel</span>
+                    </a>
                 </div>
-
-                <div class="admin-overview">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="stat-details">
-                            <h3>Total Users</h3>
-                            <p id="total-users">0</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                        <div class="stat-details">
-                            <h3>Total Documents</h3>
-                            <p id="total-documents">0</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-coins"></i>
-                        </div>
-                        <div class="stat-details">
-                            <h3>Pending Requests</h3>
-                            <p id="pending-requests">0</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div class="stat-details">
-                            <h3>Scans Today</h3>
-                            <p id="scans-today">0</p>
-                        </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-avatar" id="user-avatar">UN</div>
+                    <div class="user-details">
+                        <div class="user-name" id="user-name">User</div>
+                        <div class="user-role" id="user-role">Admin</div>
                     </div>
                 </div>
+                <a href="#" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1 class="page-title">Admin Dashboard</h1>
+                
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Search users...">
+                </div>
+            </div>
 
-                <div class="admin-tabs">
-                    <div class="tabs-header">
-                        <button class="tab-btn active" data-tab="users">
-                            <i class="fas fa-users"></i> Users
-                        </button>
-                        <button class="tab-btn" data-tab="credit-requests">
-                            <i class="fas fa-coins"></i> Credit Requests
-                        </button>
-                        <button class="tab-btn" data-tab="analytics">
-                            <i class="fas fa-chart-bar"></i> Analytics
-                        </button>
-                        <button class="tab-btn" data-tab="settings">
-                            <i class="fas fa-cog"></i> Settings
+            
+            <!-- Admin Tabs -->
+            <div class="admin-section-container">
+                <div class="tabs">
+                    <div class="tab active" data-tab="users">Users</div>
+                    <div class="tab" data-tab="documents">Documents</div>
+                    <div class="tab" data-tab="credits">Credits Management</div>
+                    <div class="tab" data-tab="settings">System Settings</div>
+                </div>
+                
+                <!-- Users Tab -->
+                <div class="tab-content active" id="users-tab">
+                    <div class="section-header">
+                        <h3 class="section-title">User Management</h3>
+                        <button class="btn btn-primary" id="add-user-btn">
+                            <i class="fas fa-plus"></i>
+                            Add User
                         </button>
                     </div>
-                    <div class="tabs-content">
-                        <div class="tab-pane active" id="users-tab">
-                            <div class="tab-header">
-                                <h2>User Management</h2>
-                                <div class="tab-actions">
-                                    <div class="search-container">
-                                        <input type="text" placeholder="Search users..." id="user-search">
-                                        <i class="fas fa-search"></i>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Documents</th>
+                                    <th>Credits</th>
+                                    <th>Joined</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <tr>
+                                    <td>
+                                        <div class="user-table-info">
+                                            <div class="user-table-avatar">JD</div>
+                                            <div>
+                                                <div class="user-table-name">John Doe</div>
+                                                <div class="user-table-email">john.doe@example.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>User</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>12</td>
+                                    <td>25</td>
+                                    <td>03/01/2023</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-outline btn-sm edit-user" data-id="1">
+                                                <i class="fas fa-edit"></i>
+                                                Edit
+                                            </button>
+                                            <button class="btn btn-danger btn-sm delete-user" data-id="1">
+                                                <i class="fas fa-trash"></i>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="user-table-info">
+                                            <div class="user-table-avatar">JS</div>
+                                            <div>
+                                                <div class="user-table-name">Jane Smith</div>
+                                                <div class="user-table-email">jane.smith@example.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Admin</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>8</td>
+                                    <td>100</td>
+                                    <td>02/15/2023</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-outline btn-sm edit-user" data-id="2">
+                                                <i class="fas fa-edit"></i>
+                                                Edit
+                                            </button>
+                                            <button class="btn btn-danger btn-sm delete-user" data-id="2">
+                                                <i class="fas fa-trash"></i>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="user-table-info">
+                                            <div class="user-table-avatar">RJ</div>
+                                            <div>
+                                                <div class="user-table-name">Robert Johnson</div>
+                                                <div class="user-table-email">robert.j@example.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>User</td>
+                                    <td><span class="status-badge status-inactive">Inactive</span></td>
+                                    <td>0</td>
+                                    <td>5</td>
+                                    <td>03/05/2023</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-outline btn-sm edit-user" data-id="3">
+                                                <i class="fas fa-edit"></i>
+                                                Edit
+                                            </button>
+                                            <button class="btn btn-danger btn-sm delete-user" data-id="3">
+                                                <i class="fas fa-trash"></i>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Documents Tab -->
+                <div class="tab-content" id="documents-tab">
+                    <div class="section-header">
+                        <h3 class="section-title">Document Management</h3>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Document</th>
+                                    <th>Owner</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Uploaded</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="documents-table-body">
+                                <tr>
+                                    <td>
+                                        <div class="user-table-info">
+                                            <div class="document-icon">
+                                                <i class="fas fa-file-alt"></i>
+                                            </div>
+                                            <div>
+                                                <div class="user-table-name">Financial_Report_2023.txt</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>John Doe</td>
+                                    <td>Text File</td>
+                                    <td>256 KB</td>
+                                    <td>03/01/2023</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-outline btn-sm view-document" data-id="1">
+                                                <i class="fas fa-eye"></i>
+                                                View
+                                            </button>
+                                            <button class="btn btn-danger btn-sm delete-document" data-id="1">
+                                                <i class="fas fa-trash"></i>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="user-table-info">
+                                            <div class="document-icon">
+                                                <i class="fas fa-file-alt"></i>
+                                            </div>
+                                            <div>
+                                                <div class="user-table-name">Customer_Data.csv</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Jane Smith</td>
+                                    <td>CSV File</td>
+                                    <td>1.2 MB</td>
+                                    <td>02/15/2023</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-outline btn-sm view-document" data-id="2">
+                                                <i class="fas fa-eye"></i>
+                                                View
+                                            </button>
+                                            <button class="btn btn-danger btn-sm delete-document" data-id="2">
+                                                <i class="fas fa-trash"></i>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="user-table-info">
+                                            <div class="document-icon">
+                                                <i class="fas fa-file-alt"></i>
+                                            </div>
+                                            <div>
+                                                <div class="user-table-name">Project_Notes.txt</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Robert Johnson</td>
+                                    <td>Text File</td>
+                                    <td>45 KB</td>
+                                    <td>03/05/2023</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-outline btn-sm view-document" data-id="3">
+                                                <i class="fas fa-eye"></i>
+                                                View
+                                            </button>
+                                            <button class="btn btn-danger btn-sm delete-document" data-id="3">
+                                                <i class="fas fa-trash"></i>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Credits Management Tab -->
+                <div class="tab-content" id="credits-tab">
+                    <div class="section-header">
+                        <h3 class="section-title">Credits Management</h3>
+                        <button class="add-credits-btn" id="add-credits-btn">
+                            <i class="fas fa-plus"></i>
+                            Add Credits
+                        </button>
+                    </div>
+                    
+                    <table class="credits-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Reason</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Admin Response</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="credits-table-body">
+                            <!-- Credit requests will be loaded here dynamically -->
+                            <tr>
+                                <td colspan="7" class="empty-message">
+                                    <div class="loading-spinner"></div>
+                                    <p>Loading credit requests...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- System Settings Tab -->
+                <div class="tab-content" id="settings-tab">
+                    <div class="section-header">
+                        <h3 class="section-title">System Settings</h3>
+                        <button class="btn btn-primary" id="save-settings-btn">
+                            <i class="fas fa-save"></i>
+                            Save Changes
+                        </button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="default-credits" class="form-label">Default Credits for New Users</label>
+                        <input type="number" id="default-credits" class="form-control" value="10">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="scan-cost" class="form-label">Credits Cost per Scan</label>
+                        <input type="number" id="scan-cost" class="form-control" value="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ai-scan-cost" class="form-label">Additional Credits for AI-Enhanced Scan</label>
+                        <input type="number" id="ai-scan-cost" class="form-control" value="2">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="max-file-size" class="form-label">Maximum File Size (MB)</label>
+                        <input type="number" id="max-file-size" class="form-control" value="10">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="allowed-file-types" class="form-label">Allowed File Types (comma separated)</label>
+                        <input type="text" id="allowed-file-types" class="form-control" value=".txt, .csv, .md">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">System Features</label>
+                        <div>
+                            <input type="checkbox" id="enable-ai" checked>
+                            <label for="enable-ai">Enable AI-Enhanced Scanning</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="enable-registration" checked>
+                            <label for="enable-registration">Allow New User Registration</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="enable-credit-requests" checked>
+                            <label for="enable-credit-requests">Allow Credit Requests</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add User Modal -->
+    <div class="modal" id="add-user-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New User</h3>
+                <button class="modal-close" id="close-add-user-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="user-name" class="form-label">Full Name</label>
+                    <input type="text" id="user-name" class="form-control" placeholder="Enter full name">
+                </div>
+                <div class="form-group">
+                    <label for="user-email" class="form-label">Email Address</label>
+                    <input type="email" id="user-email" class="form-control" placeholder="Enter email address">
+                </div>
+                <div class="form-group">
+                    <label for="user-password" class="form-label">Password</label>
+                    <input type="password" id="user-password" class="form-control" placeholder="Enter password">
+                </div>
+                <div class="form-group">
+                    <label for="user-role" class="form-label">Role</label>
+                    <select id="user-role-select" class="form-control">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="user-credits" class="form-label">Initial Credits</label>
+                    <input type="number" id="user-credits" class="form-control" value="10">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-add-user">Cancel</button>
+                <button class="btn btn-primary" id="submit-add-user">Add User</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Credits Modal -->
+    <div class="modal" id="add-credits-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Credits</h3>
+                <button class="modal-close" id="close-add-credits-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="credits-user" class="form-label">User</label>
+                    <select id="credits-user" class="form-control">
+                        <option value="1">John Doe (john.doe@example.com)</option>
+                        <option value="2">Jane Smith (jane.smith@example.com)</option>
+                        <option value="3">Robert Johnson (robert.j@example.com)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="credits-amount" class="form-label">Credits Amount</label>
+                    <input type="number" id="credits-amount" class="form-control" value="10">
+                </div>
+                <div class="form-group">
+                    <label for="credits-reason" class="form-label">Reason (Optional)</label>
+                    <textarea id="credits-reason" class="form-control" rows="3" placeholder="Enter reason for adding credits"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-add-credits">Cancel</button>
+                <button class="btn btn-primary" id="submit-add-credits">Add Credits</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in and is admin
+            const token = localStorage.getItem('token');
+            const userData = JSON.parse(localStorage.getItem('user')) || {};
+            
+            if (!token || userData.role !== 'admin') {
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            // Update user info in sidebar
+            document.getElementById('user-name').textContent = userData.name || 'Admin';
+            document.getElementById('user-role').textContent = 'Admin';
+            
+            // Update avatar with initials
+            const initials = userData.name ? userData.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'AD';
+            document.getElementById('user-avatar').textContent = initials;
+            
+            // Set up logout functionality
+            document.querySelector('.logout-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = '/login.html';
+            });
+            
+            // Set up tab navigation
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                    
+                    // Load data for the tab
+                    if (tabId === 'credits') {
+                        loadCreditRequests();
+                    } else if (tabId === 'users') {
+                        // We'll populate this from the credit requests data
+                        loadCreditRequests().then(() => {
+                            populateUsersFromCreditRequests();
+                        });
+                    }
+                });
+            });
+            
+            // Click on the Credits tab by default
+            document.querySelector('.tab[data-tab="credits"]').click();
+            
+            // Store credit requests data globally to use for populating users
+            let creditRequestsData = [];
+            
+            async function loadCreditRequests() {
+                try {
+                    console.log('Fetching credit requests from API...');
+                    
+                    const response = await fetch('/api/credits/admin/requests', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Failed to load credit requests: ${response.status}`);
+                    }
+                    
+                    const requests = await response.json();
+                    console.log('Credit requests data:', requests);
+                    
+                    // Store the data globally
+                    creditRequestsData = requests;
+                    
+                    const creditsTableBody = document.getElementById('credits-table-body');
+                    
+                    if (!Array.isArray(requests) || requests.length === 0) {
+                        creditsTableBody.innerHTML = `
+                            <tr>
+                                <td colspan="7" class="empty-message">
+                                    <i class="fas fa-coins" style="font-size: 48px; color: #e9ecef; margin-bottom: 15px;"></i>
+                                    <p>No credit requests found</p>
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    creditsTableBody.innerHTML = requests.map(req => {
+                        // Extract user information from the API response
+                        const userName = req.user && req.user.username ? req.user.username : 'Unknown';
+                        const userEmail = req.user && req.user.email ? req.user.email : '';
+                        const userInitials = getUserInitials(userName);
+                        
+                        // Get status with proper formatting
+                        const status = req.status || 'pending';
+                        const statusText = status.charAt(0).toUpperCase() + status.slice(1);
+                        const statusClass = `status-${status}`;
+                        
+                        // Format date
+                        const createdDate = formatDate(req.createdAt);
+                        
+                        // Get admin response if available
+                        const adminResponse = req.adminResponse || '-';
+                        
+                        return `
+                            <tr>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar">${userInitials}</div>
+                                        <div class="user-info">
+                                            <div class="user-name">${userName}</div>
+                                            <div class="user-email">${userEmail}</div>
+                                        </div>
                                     </div>
-                                    <button class="btn btn-primary" id="add-user-btn">
-                                        <i class="fas fa-plus"></i> Add User
+                                </td>
+                                <td class="credits-amount">${req.amount || 0}</td>
+                                <td class="reason-cell">${req.reason || '-'}</td>
+                                <td class="date-cell">${createdDate}</td>
+                                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                                <td class="admin-response">${adminResponse}</td>
+                                <td class="action-cell">
+                                    ${status === 'pending' ? `
+                                        <button class="action-btn btn-approve approve-request" data-id="${req._id}">
+                                            <i class="fas fa-check"></i>
+                                            Approve
+                                        </button>
+                                        <button class="action-btn btn-reject reject-request" data-id="${req._id}">
+                                            <i class="fas fa-times"></i>
+                                            Reject
+                                        </button>
+                                    ` : `
+                                        <span class="processed-label">Processed</span>
+                                    `}
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                    
+                    // Add event listeners to action buttons
+                    document.querySelectorAll('.approve-request').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const requestId = this.getAttribute('data-id');
+                            approveRequest(requestId);
+                        });
+                    });
+                    
+                    document.querySelectorAll('.reject-request').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const requestId = this.getAttribute('data-id');
+                            rejectRequest(requestId);
+                        });
+                    });
+                    
+                    return requests;
+                } catch (error) {
+                    console.error('Error loading credit requests:', error);
+                    document.getElementById('credits-table-body').innerHTML = `
+                        <tr>
+                            <td colspan="7" class="empty-message">
+                                <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #f8d7da; margin-bottom: 15px;"></i>
+                                <p>Error loading credit requests: ${error.message}</p>
+                                <button class="btn btn-primary" onclick="location.reload()">Retry</button>
+                            </td>
+                        </tr>
+                    `;
+                    return [];
+                }
+            }
+            
+            function populateUsersFromCreditRequests() {
+                if (!creditRequestsData || creditRequestsData.length === 0) {
+                    document.getElementById('users-table-body').innerHTML = `
+                        <tr>
+                            <td colspan="7" class="empty-message">No users found</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                // Extract unique users from credit requests
+                const uniqueUsers = {};
+                
+                creditRequestsData.forEach(req => {
+                    if (req.user && req.user._id) {
+                        const userId = req.user._id;
+                        
+                        if (!uniqueUsers[userId]) {
+                            uniqueUsers[userId] = {
+                                _id: userId,
+                                name: req.user.username || 'Unknown',
+                                email: req.user.email || '',
+                                role: req.user.username === 'saurabh' ? 'Admin' : 'User', // Assume saurabh is admin
+                                active: true,
+                                documents: 0,
+                                credits: 0,
+                                createdAt: req.createdAt
+                            };
+                        }
+                        
+                        // Count approved credits for this user
+                        if (req.status === 'approved') {
+                            uniqueUsers[userId].credits += req.amount || 0;
+                        }
+                    }
+                });
+                
+                // Convert to array
+                const users = Object.values(uniqueUsers);
+                
+                // Populate users table
+                const userTableBody = document.getElementById('users-table-body');
+                
+                if (users.length === 0) {
+                    userTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="empty-message">No users found</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                userTableBody.innerHTML = users.map(user => {
+                    const userInitials = getUserInitials(user.name);
+                    const formattedDate = formatDate(user.createdAt);
+                    
+                    return `
+                        <tr>
+                            <td>
+                                <div class="user-table-info">
+                                    <div class="user-table-avatar">${userInitials}</div>
+                                    <div>
+                                        <div class="user-table-name">${user.name}</div>
+                                        <div class="user-table-email">${user.email}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${user.role}</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>${user.documents}</td>
+                            <td>${user.credits}</td>
+                            <td>${formattedDate}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-outline btn-sm edit-user" data-id="${user._id}">
+                                        <i class="fas fa-edit"></i>
+                                        Edit
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-user" data-id="${user._id}">
+                                        <i class="fas fa-trash"></i>
+                                        Delete
                                     </button>
                                 </div>
-                            </div>
-                            <div class="users-table-container">
-                                <table class="data-table" id="users-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Role</th>
-                                            <th>Credits</th>
-                                            <th>Joined</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- User rows will be added here dynamically -->
-                                    </tbody>
-                                </table>
-                                <div class="empty-state" id="no-users">
-                                    <i class="fas fa-users"></i>
-                                    <p>No users found</p>
-                                </div>
-                            </div>
-                            <div class="pagination">
-                                <button class="pagination-btn" id="users-prev-page" disabled>
-                                    <i class="fas fa-chevron-left"></i> Previous
-                                </button>
-                                <div class="pagination-info">
-                                    Page <span id="users-current-page">1</span> of <span id="users-total-pages">1</span>
-                                </div>
-                                <button class="pagination-btn" id="users-next-page" disabled>
-                                    Next <i class="fas fa-chevron-right"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane" id="credit-requests-tab">
-                            <div class="tab-header">
-                                <h2>Credit Requests</h2>
-                                <div class="tab-actions">
-                                    <div class="filter-group">
-                                        <select id="request-status-filter">
-                                            <option value="all">All Requests</option>
-                                            <option value="pending">Pending</option>
-                                            <option value="approved">Approved</option>
-                                            <option value="rejected">Rejected</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="requests-table-container">
-                                <table class="data-table" id="requests-table">
-                                    <thead>
-                                        <tr>
-                                            <th>User</th>
-                                            <th>Amount</th>
-                                            <th>Reason</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- Request rows will be added here dynamically -->
-                                    </tbody>
-                                </table>
-                                <div class="empty-state" id="no-credit-requests">
-                                    <i class="fas fa-coins"></i>
-                                    <p>No credit requests found</p>
-                                </div>
-                            </div>
-                            <div class="pagination">
-                                <button class="pagination-btn" id="requests-prev-page" disabled>
-                                    <i class="fas fa-chevron-left"></i> Previous
-                                </button>
-                                <div class="pagination-info">
-                                    Page <span id="requests-current-page">1</span> of <span id="requests-total-pages">1</span>
-                                </div>
-                                <button class="pagination-btn" id="requests-next-page" disabled>
-                                    Next <i class="fas fa-chevron-right"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane" id="analytics-tab">
-                            <div class="tab-header">
-                                <h2>Analytics</h2>
-                                <div class="tab-actions">
-                                    <div class="filter-group">
-                                        <select id="analytics-period">
-                                            <option value="7days">Last 7 Days</option>
-                                            <option value="30days">Last 30 Days</option>
-                                            <option value="90days">Last 90 Days</option>
-                                            <option value="year">Last Year</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="analytics-container">
-                                <div class="analytics-row">
-                                    <div class="analytics-card">
-                                        <h3>User Growth</h3>
-                                        <div class="chart-container">
-                                            <canvas id="user-growth-chart"></canvas>
-                                        </div>
-                                    </div>
-                                    <div class="analytics-card">
-                                        <h3>Document Scans</h3>
-                                        <div class="chart-container">
-                                            <canvas id="document-scans-chart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="analytics-row">
-                                    <div class="analytics-card">
-                                        <h3>Credit Usage</h3>
-                                        <div class="chart-container">
-                                            <canvas id="credit-usage-chart"></canvas>
-                                        </div>
-                                    </div>
-                                    <div class="analytics-card">
-                                        <h3>AI vs Basic Scans</h3>
-                                        <div class="chart-container">
-                                            <canvas id="scan-types-chart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="analytics-summary">
-                                    <h3>Key Metrics</h3>
-                                    <div class="metrics-grid">
-                                        <div class="metric-card">
-                                            <h4>Active Users</h4>
-                                            <p id="active-users">0</p>
-                                            <span class="trend positive">+5% <i class="fas fa-arrow-up"></i></span>
-                                        </div>
-                                        <div class="metric-card">
-                                            <h4>Avg. Scans per User</h4>
-                                            <p id="avg-scans">0</p>
-                                            <span class="trend positive">+2% <i class="fas fa-arrow-up"></i></span>
-                                        </div>
-                                        <div class="metric-card">
-                                            <h4>AI Usage Rate</h4>
-                                            <p id="ai-usage-rate">0%</p>
-                                            <span class="trend positive">+8% <i class="fas fa-arrow-up"></i></span>
-                                        </div>
-                                        <div class="metric-card">
-                                            <h4>Avg. Credits per User</h4>
-                                            <p id="avg-credits">0</p>
-                                            <span class="trend negative">-3% <i class="fas fa-arrow-down"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane" id="settings-tab">
-                            <div class="tab-header">
-                                <h2>System Settings</h2>
-                            </div>
-                            <div class="settings-container">
-                                <div class="settings-card">
-                                    <h3>AI Configuration</h3>
-                                    <form id="ai-settings-form">
-                                        <div class="form-group">
-                                            <label for="ai-enabled">AI Matching</label>
-                                            <div class="toggle-switch">
-                                                <input type="checkbox" id="ai-enabled" name="aiEnabled" checked>
-                                                <label for="ai-enabled"></label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="ai-provider">AI Provider</label>
-                                            <select id="ai-provider" name="aiProvider">
-                                                <option value="huggingface">Hugging Face</option>
-                                                <option value="openai">OpenAI</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="ai-threshold">Similarity Threshold</label>
-                                            <input type="range" id="ai-threshold" name="aiThreshold" min="0.1" max="0.9" step="0.1" value="0.3">
-                                            <div class="range-value"><span id="threshold-value">0.3</span></div>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Save AI Settings</button>
-                                    </form>
-                                </div>
-
-                                <div class="settings-card">
-                                    <h3>Credit Settings</h3>
-                                    <form id="credit-settings-form">
-                                        <div class="form-group">
-                                            <label for="default-credits">Default Credits for New Users</label>
-                                            <input type="number" id="default-credits" name="defaultCredits" min="0" value="10">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="max-request">Maximum Credits per Request</label>
-                                            <input type="number" id="max-request" name="maxRequest" min="1" value="100">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="auto-approve">Auto-Approve Requests</label>
-                                            <div class="toggle-switch">
-                                                <input type="checkbox" id="auto-approve" name="autoApprove">
-                                                <label for="auto-approve"></label>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Save Credit Settings</button>
-                                    </form>
-                                </div>
-
-                                <div class="settings-card">
-                                    <h3>System Maintenance</h3>
-                                    <div class="maintenance-actions">
-                                        <button class="btn btn-outline" id="clear-cache-btn">
-                                            <i class="fas fa-broom"></i> Clear Cache
-                                        </button>
-                                        <button class="btn btn-outline" id="backup-db-btn">
-                                            <i class="fas fa-database"></i> Backup Database
-                                        </button>
-                                        <button class="btn btn-danger" id="reset-system-btn">
-                                            <i class="fas fa-exclamation-triangle"></i> Reset System
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- User Modal -->
-    <div class="modal" id="user-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="user-modal-title">Add User</h2>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="user-form">
-                    <input type="hidden" id="user-id" name="userId">
-                    <div class="form-group">
-                        <label for="user-name">Name</label>
-                        <input type="text" id="user-name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="user-email">Email</label>
-                        <input type="email" id="user-email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="user-password">Password</label>
-                        <input type="password" id="user-password" name="password">
-                        <small class="form-hint">Leave blank to keep current password (for editing)</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="user-role">Role</label>
-                        <select id="user-role" name="role">
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="user-credits">Credits</label>
-                        <input type="number" id="user-credits" name="credits" min="0" value="10">
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-outline" id="cancel-user-btn">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save User</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Credit Request Modal -->
-    <div class="modal" id="credit-request-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Credit Request</h2>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="request-details">
-                    <div class="request-info">
-                        <p><strong>User:</strong> <span id="request-user">John Doe</span></p>
-                        <p><strong>Amount:</strong> <span id="request-amount">10</span> credits</p>
-                        <p><strong>Date:</strong> <span id="request-date">May 10, 2025</span></p>
-                        <p><strong>Status:</strong> <span id="request-status" class="status-badge pending">Pending</span></p>
-                    </div>
-                    <div class="request-reason">
-                        <h3>Reason for Request</h3>
-                        <p id="request-reason-text">Need more credits for document scanning.</p>
-                    </div>
-                </div>
-                <form id="request-action-form">
-                    <input type="hidden" id="request-id" name="requestId">
-                    <div class="form-group">
-                        <label for="admin-notes">Admin Notes</label>
-                        <textarea id="admin-notes" name="adminNotes" rows="3" placeholder="Add notes about this request..."></textarea>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-danger" id="reject-request-btn">Reject</button>
-                        <button type="button" class="btn btn-primary" id="approve-request-btn">Approve</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/admin.js"></script>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+                
+                // Add event listeners to action buttons (just for UI, no actual API calls)
+                document.querySelectorAll('.edit-user').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const userId = this.getAttribute('data-id');
+                        alert(`Edit user with ID: ${userId} (Placeholder - no API call)`);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-user').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const userId = this.getAttribute('data-id');
+                        alert(`Delete user with ID: ${userId} (Placeholder - no API call)`);
+                    });
+                });
+            }
+            
+            async function approveRequest(requestId) {
+                if (confirm('Are you sure you want to approve this credit request?')) {
+                    try {
+                        console.log(`Approving credit request with ID: ${requestId}`);
+                        
+                        // Prompt for admin response
+                        const adminResponse = prompt('Add a response (optional):');
+                        
+                        const requestBody = {
+                            status: 'approved'
+                        };
+                        
+                        // Only add adminResponse if provided
+                        if (adminResponse) {
+                            requestBody.adminResponse = adminResponse;
+                        }
+                        
+                        const response = await fetch(`/api/credits/admin/requests/${requestId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(requestBody)
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`Failed to approve request: ${response.status}`);
+                        }
+                        
+                        alert('Credit request approved successfully');
+                        loadCreditRequests().then(() => {
+                            populateUsersFromCreditRequests();
+                        });
+                    } catch (error) {
+                        console.error('Error approving credit request:', error);
+                        alert(`Error approving credit request: ${error.message}`);
+                    }
+                }
+            }
+            
+            async function rejectRequest(requestId) {
+                if (confirm('Are you sure you want to reject this credit request?')) {
+                    try {
+                        console.log(`Rejecting credit request with ID: ${requestId}`);
+                        
+                        // Prompt for admin response
+                        const adminResponse = prompt('Add a reason for rejection (optional):');
+                        
+                        const requestBody = {
+                            status: 'rejected'
+                        };
+                        
+                        // Only add adminResponse if provided
+                        if (adminResponse) {
+                            requestBody.adminResponse = adminResponse;
+                        }
+                        
+                        const response = await fetch(`/api/credits/admin/requests/${requestId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(requestBody)
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`Failed to reject request: ${response.status}`);
+                        }
+                        
+                        alert('Credit request rejected successfully');
+                        loadCreditRequests().then(() => {
+                            populateUsersFromCreditRequests();
+                        });
+                    } catch (error) {
+                        console.error('Error rejecting credit request:', error);
+                        alert(`Error rejecting credit request: ${error.message}`);
+                    }
+                }
+            }
+            
+            // Helper functions
+            function getUserInitials(name) {
+                if (!name || name === 'Unknown') return 'UN';
+                return name.split(' ').map(n => n[0]).join('').toUpperCase();
+            }
+            
+            function formatDate(dateString) {
+                if (!dateString) return 'N/A';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            
+            function getStatusClass(status) {
+                switch (status) {
+                    case 'approved':
+                        return 'status-approved';
+                    case 'rejected':
+                        return 'status-rejected';
+                    case 'pending':
+                    default:
+                        return 'status-pending';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
