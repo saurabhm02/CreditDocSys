@@ -688,31 +688,31 @@
                     }
                     
                     // Fetch scans if API exists
-                    try {
-                        const scansResponse = await fetch('/api/scans', {
-                            headers: {
-                                'Authorization': `Bearer ${token}`
-                            }
-                        });
+                //     try {
+                //         const scansResponse = await fetch('/api/scans', {
+                //             headers: {
+                //                 'Authorization': `Bearer ${token}`
+                //             }
+                //         });
                         
-                        if (scansResponse.ok) {
-                            const scans = await scansResponse.json();
-                            if (Array.isArray(scans)) {
-                                document.getElementById('scans-count').textContent = scans.length || 0;
+                //         if (scansResponse.ok) {
+                //             const scans = await scansResponse.json();
+                //             if (Array.isArray(scans)) {
+                //                 document.getElementById('scans-count').textContent = scans.length || 0;
                                 
-                                // Calculate matches
-                                const matches = scans.reduce((total, scan) => {
-                                    return total + (scan.matches ? scan.matches.length : 0);
-                                }, 0);
+                //                 // Calculate matches
+                //                 const matches = scans.reduce((total, scan) => {
+                //                     return total + (scan.matches ? scan.matches.length : 0);
+                //                 }, 0);
                                 
-                                document.getElementById('matches-count').textContent = matches;
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Error fetching scans:', error);
-                        document.getElementById('scans-count').textContent = '0';
-                        document.getElementById('matches-count').textContent = '0';
-                    }
+                //                 document.getElementById('matches-count').textContent = matches;
+                //             }
+                //         }
+                //     } catch (error) {
+                //         console.error('Error fetching scans:', error);
+                //         document.getElementById('scans-count').textContent = '0';
+                //         document.getElementById('matches-count').textContent = '0';
+                //     }
                 } catch (error) {
                     console.error('Error loading dashboard data:', error);
                     document.getElementById('documents-count').textContent = '0';

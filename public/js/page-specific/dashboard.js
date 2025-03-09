@@ -19,21 +19,21 @@ document.addEventListener('DOMContentLoaded', function() {
             renderRecentDocuments(documents);
             
             // Fetch scans if API exists
-            try {
-                const scans = await fetchScans();
-                document.getElementById('scans-count').textContent = scans.length || 0;
+            // try {
+            //     const scans = await fetchScans();
+            //     document.getElementById('scans-count').textContent = scans.length || 0;
                 
-                // Calculate matches
-                const matches = scans.reduce((total, scan) => {
-                    return total + (scan.matches ? scan.matches.length : 0);
-                }, 0);
+            //     // Calculate matches
+            //     const matches = scans.reduce((total, scan) => {
+            //         return total + (scan.matches ? scan.matches.length : 0);
+            //     }, 0);
                 
-                document.getElementById('matches-count').textContent = matches;
-            } catch (error) {
-                console.error('Error fetching scans:', error);
-                document.getElementById('scans-count').textContent = '0';
-                document.getElementById('matches-count').textContent = '0';
-            }
+            //     document.getElementById('matches-count').textContent = matches;
+            // } catch (error) {
+            //     console.error('Error fetching scans:', error);
+            //     document.getElementById('scans-count').textContent = '0';
+            //     document.getElementById('matches-count').textContent = '0';
+            // }
         } catch (error) {
             console.error('Error loading dashboard data:', error);
             document.getElementById('documents-count').textContent = '0';

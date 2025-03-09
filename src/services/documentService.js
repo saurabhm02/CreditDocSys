@@ -342,16 +342,28 @@ const getDocumentHistory = async (req, res) => {
     
     logger.info(`Retrieved ${history.length} scan history entries for user: ${req.user.id}`);
     
-    return res.status(200).json(history.map(entry => ({
-      id: entry._id,
-      document: entry.document ? {
-        id: entry.document._id,
-        title: entry.document.title,
-        createdAt: entry.document.createdAt
-      } : null,
-      scanType: entry.scanType,
-      createdAt: entry.createdAt
-    })));
+    return res.status(200).json(history.map(entry => {
+      // Check if matchResults exists and count the matches
+      const matchesCount = entry.matchResults && Array.isArray(entry.matchResults) 
+        ? entry.matchResults.length 
+        : 0;
+      
+      return {
+        id: entry._id,
+        document: entry.document ? {
+          id: entry.document._id,
+          title: entry.document.title,
+          createdAt: entry.document.createdAt
+        } : null,
+        // Use usedAI field instead of aiUsed
+        aiUsed: entry.usedAI || false,
+        // Use matchResults length for matches count
+        matches: matchesCount,
+        scanType: entry.scanType || (entry.usedAI ? 'ai' : 'standard'),
+        status: entry.status || 'Completed',
+        createdAt: entry.createdAt
+      };
+    }));
   } catch (error) {
     logger.error(`Error getting document history: ${error.message}`);
     return res.status(500).json({ message: 'Error getting document history' });
